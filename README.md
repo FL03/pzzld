@@ -1,4 +1,9 @@
-# template-workspace
+# pzzld
+
+[![Clippy](https://github.com/FL03/pzzld/actions/workflows/clippy.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/clippy.yml)
+[![Rust](https://github.com/FL03/pzzld/actions/workflows/rust.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/rust.yml)
+
+
 
 A barebones repository template for quickly setting up a proper workspace
 
