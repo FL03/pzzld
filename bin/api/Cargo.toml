@@ -1,13 +1,12 @@
 [package]
 authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
 categories = []
-description = "Puzzled"
+description = "pzzld-api"
 edition = "2021"
 homepage = "https://github.com/FL03/pzzld/wiki"
 keywords = []
 license = "Apache-2.0"
-name = "pzzld"
-readme = "README.md"
+name = "pzzld-api"
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 

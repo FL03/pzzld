@@ -33,12 +33,10 @@ pub(crate) mod interface {
 
     impl CommandLineInterface {
         pub async fn handler(&self) -> scsys::AsyncResult<&Self> {
-            match self.command.clone() {
-                None => {}
-                Some(v) => {
-                    v.handler().await?;
-                }
+            if let Some(cmd) = self.command.clone() {
+                cmd.handler().await?;
             }
+
             Ok(self)
         }
     }

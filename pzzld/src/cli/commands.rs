@@ -26,7 +26,7 @@ pub enum Commands {
 
 impl Commands {
     pub async fn handler(&self) -> AsyncResult<&Self> {
-        tracing::info!("Processing commands issued to the cli...");
+        tracing::debug!("Processing commands issued to the cli...");
         match self {
             Self::Account { address } => {
                 println!("{:?}", &address);
@@ -36,8 +36,7 @@ impl Commands {
             }
             Self::System { up } => {
                 if up.clone() {
-                    tracing::info!("Spawning the api...");
-                    // tokio::spawn(async move {app.spawn_api();});
+                    tracing::debug!("Spawning the api...");
                     let api = crate::api::new();
                     api.serve().await?;
                 }

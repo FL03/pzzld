@@ -1,23 +1,26 @@
 /*
-   Appellation: api <module>
-   Contributors: FL03 <jo3mccain@icloud.com>
-   Description:
-       ... Summary ...
+    Appellation: pzzld-api <library>
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
-pub use self::interface::*;
+pub use self::{context::*, interface::*, settings::*};
 
 pub mod routes;
+pub(crate) mod context;
+pub(crate) mod settings;
 
 pub fn new() -> Api {
-    Api::default()
+    Api::new(None)
 }
 
-pub fn from_context(ctx: crate::Context) -> Api {
-    Api::new(ctx)
+pub fn from_context() -> Api {
+    Api::new(None)
 }
 
 pub(crate) mod interface {
-    use crate::{api::routes, Context};
+    use std::net::SocketAddr;
+
+    use super::{routes, Context};
     use axum::{Router, Server};
     use http::header::{HeaderName, AUTHORIZATION};
     use scsys::AsyncResult;
@@ -32,11 +35,17 @@ pub(crate) mod interface {
     #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
     pub struct Api {
         pub ctx: Context,
+        pub port: u16
     }
 
     impl Api {
-        pub fn new(ctx: Context) -> Self {
-            Self { ctx }
+        pub fn new(port: Option<u16>) -> Self {
+            let ctx = Default::default();
+            let port = port.unwrap_or(8080);
+            Self { ctx, port }
+        }
+        pub fn address(&self) -> SocketAddr {
+            SocketAddr::from(([127, 0, 0, 1], self.port))
         }
         pub async fn client(&self) -> Router {
             let mut router = Router::new();
@@ -70,7 +79,7 @@ pub(crate) mod interface {
         }
         /// Quickly run the api
         pub async fn serve(&self) -> AsyncResult {
-            let address = self.ctx.clone().settings.server.address();
+            let address = self.address();
             let client = self.client().await;
             let server = Server::bind(&address)
                 .serve(client.into_make_service())
@@ -82,10 +91,7 @@ pub(crate) mod interface {
 
     impl std::fmt::Display for Api {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(
-                f,
-                "View the application locally at http://localhost:{}",
-                self.ctx.settings.server.port
+            write!(f, "{}", serde_json::to_string(&self).unwrap()
             )
         }
     }

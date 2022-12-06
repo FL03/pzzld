@@ -8,6 +8,7 @@ pub use self::{context::*, settings::*, states::*};
 
 pub mod api;
 pub mod cli;
+pub mod proxy;
 pub(crate) mod context;
 pub(crate) mod settings;
 pub(crate) mod states;
