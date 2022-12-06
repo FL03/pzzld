@@ -33,6 +33,8 @@ VOLUME ["/config"]
 
 COPY --from=builder /app/target/release/pzzld /bin/pzzld
 
+FROM runner
+
 EXPOSE ${SERVER_PORT}
 
 ENTRYPOINT [ "pzzld" ]
