@@ -2,10 +2,10 @@ name: Docker
 
 on:
   push:
-    # branches: [ "main" ]
+    branches: [ "main" ]
     tags: [ "v*.*.*" ]
-  # schedule:
-  #   - cron: "30 9 * * 5"
+  schedule:
+    - cron: "30 9 * * 5"
   workflow_dispatch:
 
 env:
