@@ -42,8 +42,9 @@ pub(crate) mod interface {
             let mut router = Router::new();
             // Merge other routers into the base router
             router = router
-                .merge(routes::Homepage::default().router())
-                .merge(routes::AuthRouter::default().router(self.ctx.clone()));
+                .merge(routes::index::router())
+                .merge(routes::auth::router(self.ctx.clone()))
+                .merge(routes::siwe::router());
             router = router
                 .layer(
                     TraceLayer::new_for_http()
