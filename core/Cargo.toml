@@ -6,8 +6,7 @@ edition = "2021"
 homepage = "https://github.com/FL03/pzzld/wiki"
 keywords = []
 license = "Apache-2.0"
-name = "pzzld"
-readme = "README.md"
+name = "pzzld-core"
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 
@@ -20,8 +19,11 @@ test = true
 [dev-dependencies]
 
 [dependencies]
-pzzld-core = { features = [], optional = true, path = "../core", version = "0.1.0" }
-pzzld-wallets = { features = [], optional = true, path = "../wallets", version = "0.1.0" }
+scsys = { features = ["full"], version = "0.1.36" }
+serde = { features = ["derive"], version = "1.0.149" }
+serde_json = "1.0.89"
+strum = { features = ["derive"], version = "0.24.1" }
+
 
 [package.metadata.docs.rs]
 all-features = true
