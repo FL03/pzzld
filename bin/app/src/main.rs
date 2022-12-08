@@ -18,7 +18,6 @@ use std::{fmt::Display, sync::Arc};
 
 #[tokio::main]
 async fn main() -> AsyncResult {
-//    dotenv::dotenv()?;
     Application::<String>::default().run().await?;
 
     Ok(())
