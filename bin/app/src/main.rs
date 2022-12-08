@@ -3,11 +3,11 @@
    Contrib: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-extern crate dotenv;
 pub use self::{context::*, settings::*, states::*};
 
 pub mod api;
 pub mod cli;
+pub mod server;
 pub(crate) mod context;
 pub(crate) mod settings;
 pub(crate) mod states;
@@ -18,7 +18,7 @@ use std::{fmt::Display, sync::Arc};
 
 #[tokio::main]
 async fn main() -> AsyncResult {
-    dotenv::dotenv()?;
+//    dotenv::dotenv()?;
     Application::<String>::default().run().await?;
 
     Ok(())

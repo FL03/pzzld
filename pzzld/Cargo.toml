@@ -20,6 +20,7 @@ test = true
 [dev-dependencies]
 
 [dependencies]
+tokio = { features = [], version = "1.21.2" }
 pzzld-core = { features = [], optional = true, path = "../core", version = "0.1.0" }
 pzzld-wallets = { features = [], optional = true, path = "../wallets", version = "0.1.0" }
 
