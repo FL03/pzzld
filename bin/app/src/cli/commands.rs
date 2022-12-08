@@ -41,7 +41,7 @@ impl Commands {
                     let api = crate::api::new();
                     api.serve().await?;
                 }
-            },
+            }
         };
         Ok(self)
     }

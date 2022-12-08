@@ -12,3 +12,15 @@ updates:
     directory: /pzzld
     schedule:
         interval: daily
+  - package-ecosystem: cargo
+    directory: /core
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
+    directory: /wallets
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
+    directory: /bin/app
+    schedule:
+        interval: daily

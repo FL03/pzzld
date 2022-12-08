@@ -1,5 +1,5 @@
 /*
-   Appellation: index <module>
+   Appellation: auth <module>
    Contrib: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
@@ -21,32 +21,18 @@ use serde_json::{json, Value};
 
 static COOKIE_NAME: &str = "SESSION";
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct AuthRouter(pub String);
+pub fn router(ctx: crate::Context) -> Router {
+    let oauth_client = oauth_client(Extension(ctx));
+    let store = MemoryStore::new();
 
-impl AuthRouter {
-    pub fn new(data: String) -> Self {
-        Self(data)
-    }
-    pub fn router(&mut self, ctx: crate::Context) -> Router {
-        let oauth_client = oauth_client(Extension(ctx));
-        let store = MemoryStore::new();
-
-        Router::new()
-            // .route("/auth", get(index))
-            .route("/token/:id", post(token))
-            .route("/auth/jetbrains", get(auth_jbspace))
-            .route("/auth/login", get(login_authorized))
-            .route("/logout", get(logout))
-            .layer(Extension(store))
-            .layer(Extension(oauth_client))
-    }
-}
-
-impl Default for AuthRouter {
-    fn default() -> Self {
-        Self::new("/oauth".to_string())
-    }
+    Router::new()
+        // .route("/auth", get(index))
+        .route("/token/:id", post(token))
+        .route("/auth/jetbrains", get(auth_jbspace))
+        .route("/auth/login", get(login_authorized))
+        .route("/logout", get(logout))
+        .layer(Extension(store))
+        .layer(Extension(oauth_client))
 }
 
 fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {

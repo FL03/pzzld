@@ -9,19 +9,11 @@ use scsys::prelude::Message;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct Homepage;
-
-impl Homepage {
-    pub fn new() -> Self {
-        Self
-    }
-    pub fn router(&mut self) -> Router {
-        Router::new()
-            .route("/", get(landing))
-            .route("/settings", get(settings))
-            .route("/notifications/:id", get(notifications).post(notifications))
-    }
+pub fn router() -> Router {
+    Router::new()
+        .route("/", get(landing))
+        .route("/settings", get(settings))
+        .route("/notifications/:id", get(notifications).post(notifications))
 }
 
 /// Define the landing endpoint
