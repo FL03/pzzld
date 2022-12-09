@@ -6,7 +6,6 @@
 use crate::Context;
 use axum::{extract::Path, routing::get, Extension, Json, Router};
 use scsys::prelude::Message;
-use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 pub fn router() -> Router {

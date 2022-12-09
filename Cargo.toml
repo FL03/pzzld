@@ -5,6 +5,7 @@ default-members = [
 ]
 
 members = [
+    "compilers",
     "core",
     "pzzld",
     "wallets",

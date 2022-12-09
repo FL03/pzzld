@@ -12,14 +12,15 @@ pub fn new() -> Api {
 }
 
 pub fn from_context(ctx: crate::Context) -> Api {
-    Api::new(ctx)
+    Api::new(ctx.clone(), ctx.settings.server.port)
 }
 
 pub(crate) mod interface {
     use crate::{api::routes, Context};
-    use axum::{Router, Server};
+    use axum::Router;
     use http::header::{HeaderName, AUTHORIZATION};
-    use scsys::BoxResult;
+    use pzzld::core::servers::Server;
+    use scsys::AsyncResult;
     use serde::{Deserialize, Serialize};
     use tower_http::{
         compression::CompressionLayer,
@@ -31,11 +32,13 @@ pub(crate) mod interface {
     #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
     pub struct Api {
         pub ctx: Context,
+        pub server: Server,
     }
 
     impl Api {
-        pub fn new(ctx: Context) -> Self {
-            Self { ctx }
+        pub fn new(ctx: Context, port: u16) -> Self {
+            let server = Server::from(port);
+            Self { ctx, server }
         }
         pub async fn client(&self) -> Router {
             let mut router = Router::new();
@@ -61,32 +64,19 @@ pub(crate) mod interface {
                 .layer(axum::Extension(self.ctx.clone()));
             router
         }
-        /// Implements a graceful shutdown when users press CTRL + C
-        pub async fn shutdown(&self) {
-            tokio::signal::ctrl_c()
-                .await
-                .expect("Expect shutdown signal handler");
-            tracing::info!("Terminating the application...");
+        /// Returns an owned instance of the server
+        pub fn server(&self) -> &Server {
+            &self.server
         }
-        /// Quickly run the api
-        pub async fn serve(&self) -> BoxResult {
-            let address = self.ctx.clone().settings.server.address();
-            let client = self.client().await;
-            let server = Server::bind(&address)
-                .serve(client.into_make_service())
-                .with_graceful_shutdown(self.shutdown())
-                .await?;
-            Ok(server)
+        /// Quickstart the server with the outlined client
+        pub async fn serve(&self) -> AsyncResult {
+            self.server().serve(self.client().await).await
         }
     }
 
     impl std::fmt::Display for Api {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(
-                f,
-                "View the application locally at http://localhost:{}",
-                self.ctx.settings.server.port
-            )
+            write!(f, "{}", serde_json::to_string(&self).ok().unwrap())
         }
     }
 }

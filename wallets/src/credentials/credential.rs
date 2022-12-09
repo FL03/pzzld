@@ -1,10 +1,9 @@
 /*
     Appellation: credentials <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
-use scsys::prelude::{AsyncResult, Timestamp};
+use scsys::{AsyncResult, Timestamp};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]

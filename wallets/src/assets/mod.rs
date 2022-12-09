@@ -20,7 +20,7 @@ pub trait Currency {
 }
 
 /// Describes the two versions of currencies
-#[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Debug, Hash, PartialEq, Eq, serde::Deserialize, serde::Serialize)]
 pub enum CurrencyType<C = Box<dyn Currency>> {
     Fiat(C),
     Token(C),

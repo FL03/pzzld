@@ -1,13 +1,20 @@
 /*
     Appellation: utils <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use rand::Rng;
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
 use std::io::Read;
+
+pub fn try_collect_files(pattern: &str) -> AsyncResult<Vec<String>> {
+    let res = glob::glob(pattern)?
+        .map(|i| i.unwrap().display().to_string())
+        .collect::<Vec<String>>();
+
+    Ok(res)
+}
 
 /// From the given path, collect the file lines into a [Vec<String>]
 pub fn extract_file_from_path(path: &str) -> Vec<String> {
@@ -15,7 +22,7 @@ pub fn extract_file_from_path(path: &str) -> Vec<String> {
         std::fs::File::open(std::path::Path::new(&path)).expect("Failed to read the file");
     let mut buffer = String::new();
     file.read_to_string(&mut buffer).expect("File Error");
-    buffer.split("\n").map(|s: &str| s.to_string()).collect()
+    buffer.split('\n').map(|s: &str| s.to_string()).collect()
 }
 
 /// Create a random set of elements from a source via index
@@ -49,7 +56,7 @@ pub fn save_to_file<'a, T: Clone + Deserialize<'a> + Serialize>(
         .open(path)?;
     let buf_writer = std::io::BufWriter::new(file);
     serde_json::to_writer_pretty(buf_writer, &data)?;
-    Ok(data.clone())
+    Ok(data)
 }
 
 #[cfg(test)]

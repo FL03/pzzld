@@ -7,18 +7,18 @@ pub use self::{context::*, settings::*, states::*};
 
 pub mod api;
 pub mod cli;
-pub mod server;
+
 pub(crate) mod context;
 pub(crate) mod settings;
 pub(crate) mod states;
 
+use pzzld::core::servers::Server;
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
 use std::{fmt::Display, sync::Arc};
 
 #[tokio::main]
 async fn main() -> AsyncResult {
-//    dotenv::dotenv()?;
     Application::<String>::default().run().await?;
 
     Ok(())
@@ -28,14 +28,21 @@ async fn main() -> AsyncResult {
 pub struct Application<T: Clone + Default + Display = String> {
     pub cnf: Settings,
     pub ctx: Context,
+    pub server: Arc<Server>,
     pub state: Arc<State<T>>,
 }
 
 impl<T: Clone + Default + Display> Application<T> {
     pub fn new(cnf: Settings) -> Self {
         let ctx = Context::new(cnf.clone());
+        let server = Arc::new(Server::default());
         let state = Arc::new(State::<T>::default());
-        Self { cnf, ctx, state }
+        Self {
+            cnf,
+            ctx,
+            server,
+            state,
+        }
     }
     pub async fn setup(&mut self) -> AsyncResult<&Self> {
         // Initialize the logger

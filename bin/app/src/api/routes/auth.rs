@@ -35,9 +35,57 @@ pub fn router(ctx: crate::Context) -> Router {
         .layer(Extension(oauth_client))
 }
 
+/// Implements the authorization url following the OAuth2 specification
+pub async fn authorize(Path(id): Path<usize>) -> Json<Value> {
+    let data = json!({ "id": id });
+    Json(data)
+}
+
+/// Implements the OAuth2 token
+pub async fn token(Path(id): Path<usize>) -> Json<Value> {
+    let data = json!({ "id": id });
+    Json(data)
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+pub struct OAuth2Urls {
+    pub auth: String,
+    pub redirect: String,
+    pub token: String,
+}
+
+impl OAuth2Urls {
+    pub fn new(auth: String, redirect: String, token: String) -> Self {
+        Self {
+            auth,
+            redirect,
+            token,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+pub struct OAuth2Client {
+    #[serde(rename = "client_id")]
+    pub id: String,
+    #[serde(rename = "client_secret")]
+    pub secret: String,
+}
+
+impl OAuth2Client {
+    pub fn new(id: String, secret: String) -> Self {
+        Self { id, secret }
+    }
+    pub fn from_env(id: Option<&str>, secret: Option<&str>) -> Self {
+        let id = std::env::var(id.unwrap_or("CLIENT_ID")).unwrap_or_default();
+        let secret = std::env::var(secret.unwrap_or("CLIENT_SECRET")).unwrap_or_default();
+        Self::new(id, secret)
+    }
+}
+
 fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
     let client_id = ctx.settings.client_id.clone();
-    let client_secret = ctx.settings.client_secret.clone();
+    let client_secret = ctx.settings.client_secret;
     let redirect_url =
         std::env::var("REDIRECT_URL").unwrap_or_else(|_| "http://localhost:9000/auth/".to_string());
 
@@ -54,18 +102,6 @@ fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
         Some(TokenUrl::new(token_url).unwrap()),
     )
     .set_redirect_uri(RedirectUrl::new(redirect_url).unwrap())
-}
-
-/// Implements the authorization url following the OAuth2 specification
-pub async fn authorize(Path(id): Path<usize>) -> Json<Value> {
-    let data = json!({ "id": id });
-    Json(data)
-}
-
-/// Implements the OAuth2 token
-pub async fn token(Path(id): Path<usize>) -> Json<Value> {
-    let data = json!({ "id": id });
-    Json(data)
 }
 
 // The user data we'll get back from Google.
@@ -97,7 +133,7 @@ async fn auth_jbspace(Extension(client): Extension<BasicClient>) -> impl IntoRes
         .url();
 
     // Redirect to Google's oauth service
-    Redirect::to(&auth_url.to_string())
+    Redirect::to(auth_url.as_ref())
 }
 
 // Valid user session required. If there is none, redirect to the auth page

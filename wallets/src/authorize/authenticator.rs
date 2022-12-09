@@ -19,7 +19,7 @@ pub enum AuthState {
 }
 
 /// Implement a secure authenticator
-#[derive(Clone, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Deserialize, serde::Serialize)]
 pub struct Authenticator {
     pub authorizations: Dictionary,
     pub endpoint: String,

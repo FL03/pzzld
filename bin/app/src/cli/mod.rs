@@ -17,7 +17,7 @@ pub(crate) mod interface {
     use clap::Parser;
     use serde::{Deserialize, Serialize};
 
-    #[derive(Clone, Debug, Deserialize, Hash, Parser, PartialEq, Serialize)]
+    #[derive(Clone, Debug, Deserialize, Eq, Hash, Parser, PartialEq, Serialize)]
     #[clap(about, author, version)]
     #[clap(long_about = "")]
     pub struct CommandLineInterface {
