@@ -36,6 +36,13 @@ impl Default for BIP0039 {
     }
 }
 
+impl std::fmt::Display for BIP0039 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(&self).unwrap().to_ascii_lowercase())
+    }
+}
+
+
 impl From<&BIP0039> for BIP0039 {
     fn from(data: &BIP0039) -> Self {
         Self::new(data.data().clone())

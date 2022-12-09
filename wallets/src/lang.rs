@@ -38,8 +38,6 @@ impl std::fmt::Display for Language {
     }
 }
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
