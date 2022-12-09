@@ -8,21 +8,40 @@ use std::convert::From;
 use strum::{EnumString, EnumVariantNames};
 
 #[derive(
-    Clone, Debug, Deserialize, EnumString, EnumVariantNames, Eq, Hash, PartialEq, Serialize,
+    Clone, Copy, Debug, Deserialize, EnumString, EnumVariantNames, Eq, Hash, PartialEq, Serialize,
 )]
 #[strum(serialize_all = "snake_case")]
 pub enum CompilerState {
     Idle = 0,
     Init = 1,
     Read = 2,
-    Write = 3,
-    Complete = 4,
-    Invalid = 5,
+    Compile = 3,
+    Write = 4,
+    Complete = 5,
+    Invalid = 6,
 }
 
 impl CompilerState {
     pub fn idle() -> Self {
         Self::Idle
+    }
+    pub fn init() -> Self {
+        Self::Init
+    }
+    pub fn invalid() -> Self {
+        Self::Invalid
+    }
+    pub fn read() -> Self {
+        Self::Read
+    }
+    pub fn write() -> Self {
+        Self::Write
+    }
+    pub fn compile() -> Self {
+        Self::Compile
+    }
+    pub fn complete() -> Self {
+        Self::Complete
     }
 }
 
@@ -35,12 +54,13 @@ impl Default for CompilerState {
 impl From<i64> for CompilerState {
     fn from(data: i64) -> Self {
         match data {
-            0 => Self::Idle,
-            1 => Self::Init,
-            2 => Self::Read,
-            3 => Self::Write,
-            4 => Self::Complete,
-            _ => Self::Invalid,
+            0 => Self::idle(),
+            1 => Self::init(),
+            2 => Self::read(),
+            3 => Self::compile(),
+            4 => Self::write(),
+            5 => Self::complete(),
+            _ => Self::invalid(),
         }
     }
 }
@@ -51,9 +71,10 @@ impl From<CompilerState> for i64 {
             CompilerState::Idle => 0,
             CompilerState::Init => 1,
             CompilerState::Read => 2,
-            CompilerState::Write => 3,
-            CompilerState::Complete => 4,
-            CompilerState::Invalid => 5,
+            CompilerState::Compile => 3,
+            CompilerState::Write => 4,
+            CompilerState::Complete => 5,
+            CompilerState::Invalid => 6,
         }
     }
 }
