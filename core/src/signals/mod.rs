@@ -1,8 +1,7 @@
 /*
-    Appellation: pzzld-core <library>
+    Appellation: signals <module>
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
 
-pub mod servers;
-pub mod signals;
+pub mod shutdown;

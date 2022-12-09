@@ -1,8 +1,8 @@
 /*
-    Appellation: pzzld-core <library>
+    Appellation: server <module>
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
+pub use self::server::*;
 
-pub mod servers;
-pub mod signals;
+pub(crate) mod server;

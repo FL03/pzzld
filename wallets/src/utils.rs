@@ -1,13 +1,20 @@
 /*
     Appellation: utils <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use rand::Rng;
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
 use std::io::Read;
+
+pub fn try_collect_files(pattern: &str) -> AsyncResult<Vec<String>> {
+    let res = glob::glob(pattern)?
+        .map(|i| i.unwrap().display().to_string())
+        .collect::<Vec<String>>();
+
+    Ok(res)
+}
 
 /// From the given path, collect the file lines into a [Vec<String>]
 pub fn extract_file_from_path(path: &str) -> Vec<String> {

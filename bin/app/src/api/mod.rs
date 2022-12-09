@@ -15,17 +15,11 @@ pub fn from_context(ctx: crate::Context) -> Api {
     Api::new(ctx.clone(), ctx.settings.server.port)
 }
 
-pub async fn shutdown() {
-    tracing::info!("Signal received; initiating shutdown procedures...");
-    tokio::signal::ctrl_c()
-        .await
-        .expect("Expect shutdown signal handler");
-}
-
 pub(crate) mod interface {
-    use crate::{api::routes, server::BackendServer, Context};
+    use crate::{api::routes, Context};
     use axum::Router;
     use http::header::{HeaderName, AUTHORIZATION};
+    use pzzld::core::servers::Server;
     use scsys::AsyncResult;
     use serde::{Deserialize, Serialize};
     use tower_http::{
@@ -38,12 +32,12 @@ pub(crate) mod interface {
     #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
     pub struct Api {
         pub ctx: Context,
-        pub server: BackendServer,
+        pub server: Server,
     }
 
     impl Api {
         pub fn new(ctx: Context, port: u16) -> Self {
-            let server = BackendServer::new(Some(port));
+            let server = Server::from(port);
             Self { ctx, server }
         }
         pub async fn client(&self) -> Router {
@@ -71,7 +65,7 @@ pub(crate) mod interface {
             router
         }
         /// Returns an owned instance of the server
-        pub fn server(&self) -> &BackendServer {
+        pub fn server(&self) -> &Server {
             &self.server
         }
         /// Quickstart the server with the outlined client

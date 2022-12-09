@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use crate::{extract_file_from_path, Language, BIP0039_WORDLIST_ENDPOINT};
+use crate::{extract_file_from_path, try_collect_files, Language, BIP0039_WORDLIST_ENDPOINT};
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
 use std::convert::From;
@@ -27,14 +27,19 @@ impl BIP0039 {
         let response = reqwest::get(endpoint.as_str()).await?.text().await?;
         Ok(Self::from(response.split('\n').collect::<Vec<_>>()))
     }
-    pub fn from_file() -> Self {
-        Self::from(extract_file_from_path("./BIP0039/english.txt"))
+    pub fn from_file() -> Option<Self> {
+        if let Ok(paths) = try_collect_files("**/BIP0039/english.txt") {
+            if paths.len() > 0 {
+                Some(Self::from(extract_file_from_path(&paths[0])));
+            }
+        }
+        None
     }
 }
 
 impl Default for BIP0039 {
     fn default() -> Self {
-        Self::from_file()
+        Self::from_file().unwrap()
     }
 }
 
@@ -66,6 +71,12 @@ where
             .collect::<Vec<String>>();
         data.retain(|x| x != &"".to_string());
         Self::new(data)
+    }
+}
+
+impl From<BIP0039> for Vec<String> {
+    fn from(data: BIP0039) -> Self {
+        data.data().clone()
     }
 }
 
