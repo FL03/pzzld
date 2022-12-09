@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use crate::{extract_file_from_path, BIP0039_WORDLIST_ENDPOINT, Language};
+use crate::{extract_file_from_path, Language, BIP0039_WORDLIST_ENDPOINT};
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
 use std::convert::From;
@@ -19,11 +19,13 @@ impl BIP0039 {
         &self.0
     }
     pub async fn fetch(lang: Option<Language>) -> AsyncResult<Self> {
-        let response = reqwest::get(format!("{}/{}.txt", BIP0039_WORDLIST_ENDPOINT, lang.unwrap_or_default().to_string()))
-            .await?
-            .text()
-            .await?;
-        Ok(Self::from(response.split("\n").collect::<Vec<_>>()))
+        let endpoint = format!(
+            "{}/{}.txt",
+            BIP0039_WORDLIST_ENDPOINT,
+            lang.unwrap_or_default()
+        );
+        let response = reqwest::get(endpoint.as_str()).await?.text().await?;
+        Ok(Self::from(response.split('\n').collect::<Vec<_>>()))
     }
     pub fn from_file() -> Self {
         Self::from(extract_file_from_path("./BIP0039/english.txt"))
@@ -38,10 +40,13 @@ impl Default for BIP0039 {
 
 impl std::fmt::Display for BIP0039 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap().to_ascii_lowercase())
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(&self).unwrap().to_ascii_lowercase()
+        )
     }
 }
-
 
 impl From<&BIP0039> for BIP0039 {
     fn from(data: &BIP0039) -> Self {
@@ -49,10 +54,16 @@ impl From<&BIP0039> for BIP0039 {
     }
 }
 
-
-impl<T> From<Vec<T>> for BIP0039 where T: Clone + ToString {
+impl<T> From<Vec<T>> for BIP0039
+where
+    T: Clone + ToString,
+{
     fn from(data: Vec<T>) -> Self {
-        let mut data = data.iter().cloned().map(|i: T| i.to_string()).collect::<Vec<String>>();
+        let mut data = data
+            .iter()
+            .cloned()
+            .map(|i: T| i.to_string())
+            .collect::<Vec<String>>();
         data.retain(|x| x != &"".to_string());
         Self::new(data)
     }

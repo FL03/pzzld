@@ -38,7 +38,7 @@ pub(crate) mod interface {
     #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
     pub struct Api {
         pub ctx: Context,
-        pub server: BackendServer
+        pub server: BackendServer,
     }
 
     impl Api {

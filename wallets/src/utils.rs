@@ -15,7 +15,7 @@ pub fn extract_file_from_path(path: &str) -> Vec<String> {
         std::fs::File::open(std::path::Path::new(&path)).expect("Failed to read the file");
     let mut buffer = String::new();
     file.read_to_string(&mut buffer).expect("File Error");
-    buffer.split("\n").map(|s: &str| s.to_string()).collect()
+    buffer.split('\n').map(|s: &str| s.to_string()).collect()
 }
 
 /// Create a random set of elements from a source via index
@@ -49,7 +49,7 @@ pub fn save_to_file<'a, T: Clone + Deserialize<'a> + Serialize>(
         .open(path)?;
     let buf_writer = std::io::BufWriter::new(file);
     serde_json::to_writer_pretty(buf_writer, &data)?;
-    Ok(data.clone())
+    Ok(data)
 }
 
 #[cfg(test)]

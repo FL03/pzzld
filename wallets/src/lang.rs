@@ -7,6 +7,14 @@ use serde::{Deserialize, Serialize};
 use std::convert::From;
 use strum::{EnumString, EnumVariantNames};
 
+fn fnl_remove<T: Clone + ToString>(data: &T) -> String {
+    let data = data.to_string();
+    let mut chars = data.chars();
+    chars.next();
+    chars.next_back();
+    chars.as_str().to_string()
+}
+
 #[derive(
     Clone,
     Copy,
@@ -28,13 +36,17 @@ pub enum Language {
 
 impl From<&Self> for Language {
     fn from(data: &Self) -> Self {
-        data.clone()
+        *data
     }
 }
 
 impl std::fmt::Display for Language {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap().to_ascii_lowercase())
+        write!(
+            f,
+            "{}",
+            fnl_remove(&serde_json::to_string(&self).unwrap()).to_ascii_lowercase()
+        )
     }
 }
 

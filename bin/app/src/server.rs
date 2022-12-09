@@ -10,7 +10,7 @@ use std::net::SocketAddr;
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct BackendServer {
-    pub port: u16
+    pub port: u16,
 }
 
 impl BackendServer {
@@ -26,7 +26,7 @@ impl BackendServer {
     pub fn builder(&self) -> hyper::server::Builder<AddrIncoming> {
         hyper::Server::bind(&self.address())
     }
-    /// Serves the client 
+    /// Serves the client
     pub async fn serve(&self, client: axum::Router) -> AsyncResult {
         self.builder()
             .serve(client.into_make_service())

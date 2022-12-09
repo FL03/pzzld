@@ -17,8 +17,8 @@ pub trait IAuthenticator<Addr: std::string::ToString, Data>:
         Self: Sized,
     {
         let mut authenticated: bool = false;
-        let _sig = signature.clone();
-        if address.to_string() == "".to_string() {
+        let _sig = signature;
+        if address.to_string() == *"" {
             authenticated = true;
         }
         Ok(authenticated)
@@ -29,24 +29,18 @@ pub trait IAuthenticator<Addr: std::string::ToString, Data>:
 mod tests {
     use super::*;
 
+    #[derive(Clone, Debug, Default, Hash, PartialEq)]
+    struct App {
+        address: String,
+        datastore: Vec<String>,
+    }
+
+    impl IAuthenticator<String, Vec<String>> for App {}
+
     #[test]
     fn test_authenticator_interface() {
-        #[derive(Clone, Debug, Hash, PartialEq)]
-        struct App {
-            address: String,
-            datastore: Vec<String>,
-        }
-        impl IAuthenticator<String, Vec<String>> for App {}
-        impl Default for App {
-            fn default() -> Self {
-                Self {
-                    address: String::new(),
-                    datastore: Vec::<String>::new(),
-                }
-            }
-        }
-        let actual = App::default();
-        let expected = actual.clone();
-        assert_eq!(actual.get().ok().unwrap(), expected.get().ok().unwrap())
+        let a = App::default();
+        let b = a.clone();
+        assert_eq!(a.get().ok().unwrap(), b.get().ok().unwrap())
     }
 }

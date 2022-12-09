@@ -3,19 +3,14 @@
    Contrib: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-use axum::{
-    extract::{self, Extension, Query},
-    routing::{get, post},
-    Json, Router,
-};
+use axum::{extract, routing::get, Json, Router};
 use scsys::Timestamp;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 pub fn router() -> Router {
-    Router::new()
-        .route("/siwe/nonce", get(generate_nonce))
-        // .route("/siwe/verify/", post(validate_message))
+    Router::new().route("/siwe/nonce", get(generate_nonce))
+    // .route("/siwe/verify/", post(validate_message))
 }
 
 pub async fn generate_nonce() -> Json<Value> {
@@ -44,11 +39,11 @@ pub struct SiweMessage {
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct MessageValidation {
     pub message: SiweMessage,
-    pub signature: Vec<u8>
+    pub signature: Vec<u8>,
 }
 
 pub async fn validate_message(extract::Json(message): extract::Json<MessageValidation>) -> bool {
-    let res = json!({"nonce": "", "message": message});
+    let _res = json!({"nonce": "", "message": message});
 
     true
 }

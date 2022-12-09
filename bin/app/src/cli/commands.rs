@@ -8,7 +8,7 @@ use clap::Subcommand;
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Hash, PartialEq, Serialize, Subcommand)]
+#[derive(Clone, Debug, Deserialize, Hash, PartialEq, Eq, Serialize, Subcommand)]
 pub enum Commands {
     Account {
         #[clap(long, short, value_parser)]
@@ -35,7 +35,7 @@ impl Commands {
                 println!("{:?}", &update);
             }
             Self::System { up } => {
-                if up.clone() {
+                if *up {
                     tracing::info!("Spawning the api...");
                     // tokio::spawn(async move {app.spawn_api();});
                     let api = crate::api::new();
