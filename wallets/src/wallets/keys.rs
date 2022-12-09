@@ -1,13 +1,12 @@
 /*
     Appellation: key <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use crate::SecpKeypair;
 use rand::rngs::OsRng;
 use scsys::Timestamp;
-use secp256k1::{PublicKey, Secp256k1, SecretKey};
+use secp256k1::Secp256k1;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]

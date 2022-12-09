@@ -1,8 +1,7 @@
 /*
     Appellation: grant <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use rand::Rng;
 use scsys::Timestamp;
@@ -19,12 +18,12 @@ impl AccessGrant {
         Self { grant, timestamp }
     }
     pub fn generator(size: usize) -> String {
-        let source = crate::BIP0039::default();
+        let source = crate::BIP0039::default().data().clone();
         let mut cache = Vec::<String>::with_capacity(size);
         let mut rng = rand::thread_rng();
         for _ in 0..size {
-            let random_index = rng.gen_range(0..source.0.clone().len());
-            cache.push(source.0[random_index].clone())
+            let random_index = rng.gen_range(0..source.len());
+            cache.push(source[random_index].clone())
         }
 
         cache.join(" ")

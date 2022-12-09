@@ -1,8 +1,7 @@
 /*
     Appellation: interface <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use scsys::prelude::AsyncResult;
 
@@ -18,7 +17,7 @@ pub trait IAuthenticator<Addr: std::string::ToString, Data>:
         Self: Sized,
     {
         let mut authenticated: bool = false;
-        let sig = signature.clone();
+        let _sig = signature.clone();
         if address.to_string() == "".to_string() {
             authenticated = true;
         }
