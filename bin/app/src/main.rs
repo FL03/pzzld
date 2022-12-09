@@ -18,6 +18,7 @@ use std::{fmt::Display, sync::Arc};
 
 #[tokio::main]
 async fn main() -> AsyncResult {
+    println!("{}", pzzld::wallets::BIP0039::fetch(None).await?);
     Application::<String>::default().run().await?;
 
     Ok(())

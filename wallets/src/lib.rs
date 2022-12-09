@@ -1,12 +1,13 @@
 /*
-    Appellation: fluidity-core <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Appellation: pzzld-wallets <library>
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 #[doc(inline)]
-pub use self::{primitives::*, utils::*};
+pub use self::{bip0039::*, lang::*, primitives::*, utils::*};
 
+pub(crate) mod bip0039;
+pub(crate) mod lang;
 pub(crate) mod primitives;
 pub(crate) mod utils;
 

@@ -1,8 +1,7 @@
 /*
     Appellation: mnemonic <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use crate::{generate_collection_from_reference, mnemonics::Passphrase};
 
@@ -20,7 +19,7 @@ impl Mnemonic {
         }
     }
     pub fn new(passphrase: Passphrase) -> Self {
-        let mnemonic = generate_collection_from_reference(crate::BIP0039::default().0, 12);
+        let mnemonic = generate_collection_from_reference(crate::BIP0039::default().data().clone(), 12);
         Self::constructor(mnemonic, passphrase)
     }
     pub fn passphrase(&self) -> String {
