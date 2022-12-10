@@ -34,8 +34,10 @@ pub async fn landing(Extension(ctx): Extension<Context>) -> Json<Message> {
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct BucketParams {
-    pub name: Option<String>,
+    pub delim: Option<String>,
+    pub name: String,
     pub path: Vec<String>,
+    pub prefix: Option<String>,
 }
 
 // Given
@@ -44,8 +46,10 @@ pub async fn fetch_bucket_object_names(
     Path(name): Path<String>,
     Query(params): Query<BucketParams>,
 ) -> Json<Value> {
-    let bucket = ctx.bucket(name.as_str()).expect("");
-    let objects = fetch_bucket_contents(bucket, "/", Some("/".to_string()))
+    let delim = Some(params.delim.unwrap_or_else(|| "/".to_string()));
+    let prefix = params.prefix.unwrap_or_else(|| "/".to_string());
+    let bucket = ctx.bucket(params.name.as_str()).expect("");
+    let objects = fetch_bucket_contents(bucket, prefix.as_str(), delim)
         .await
         .unwrap_or_default();
     let names = collect_obj_names(objects).await;
