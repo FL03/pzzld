@@ -1,15 +1,16 @@
 [workspace]
 default-members = [
-    "bin/app",
+    "bin",
     "pzzld",
 ]
 
 members = [
+    "bin",
     "compilers",
     "core",
+    "gateways",
     "pzzld",
     "wallets",
-    "bin/app"
 ]
 
 [profile.dev]

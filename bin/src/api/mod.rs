@@ -12,7 +12,7 @@ pub fn new() -> Api {
 }
 
 pub fn from_context(ctx: crate::Context) -> Api {
-    Api::new(ctx.clone(), ctx.settings.server.port)
+    Api::new(ctx.clone(), ctx.cnf.server.port)
 }
 
 pub(crate) mod interface {

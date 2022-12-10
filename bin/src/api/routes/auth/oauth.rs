@@ -48,8 +48,8 @@ pub async fn token(Path(id): Path<usize>) -> Json<Value> {
 }
 
 fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
-    let client_id = ctx.settings.client_id.clone();
-    let client_secret = ctx.settings.client_secret;
+    let client_id = ctx.cnf.client_id.clone();
+    let client_secret = ctx.cnf.client_secret;
     let redirect_url =
         std::env::var("REDIRECT_URL").unwrap_or_else(|_| "http://localhost:9000/auth/".to_string());
 

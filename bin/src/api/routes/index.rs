@@ -29,5 +29,5 @@ pub async fn notifications(Path(id): Path<usize>) -> Json<Value> {
 
 /// Broadcasts the current settings specified by the user for the interface and other technical systems to leverage
 pub async fn settings(Extension(ctx): Extension<Context>) -> Json<Value> {
-    Json(json!(ctx.settings))
+    Json(json!(ctx.cnf))
 }
