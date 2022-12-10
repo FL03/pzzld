@@ -15,7 +15,7 @@ pub(crate) mod states;
 use pzzld::core::servers::Server;
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
-use std::{fmt::Display, sync::Arc};
+use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> AsyncResult {
