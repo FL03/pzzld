@@ -19,24 +19,24 @@ use std::{fmt::Display, sync::Arc};
 
 #[tokio::main]
 async fn main() -> AsyncResult {
-    Application::<String>::default().run().await?;
+    Application::default().run().await?;
 
     Ok(())
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct Application<T: Clone + Default + Display = String> {
+pub struct Application {
     pub cnf: Settings,
     pub ctx: Context,
     pub server: Arc<Server>,
-    pub state: Arc<State<T>>,
+    pub state: Arc<State>,
 }
 
-impl<T: Clone + Default + Display> Application<T> {
+impl Application {
     pub fn new(cnf: Settings) -> Self {
         let ctx = Context::new(cnf.clone());
         let server = Arc::new(Server::default());
-        let state = Arc::new(State::<T>::default());
+        let state = Arc::new(State::default());
         Self {
             cnf,
             ctx,
@@ -52,7 +52,7 @@ impl<T: Clone + Default + Display> Application<T> {
         tracing::info!("Success: Application initialized and awaiting commands");
         Ok(self)
     }
-    pub fn set_state(&mut self, state: State<T>) -> &Self {
+    pub fn set_state(&mut self, state: State) -> &Self {
         self.state = Arc::new(state);
         self
     }
@@ -65,8 +65,8 @@ impl<T: Clone + Default + Display> Application<T> {
     }
 }
 
-impl<T: Clone + Default + Display + Serialize> std::fmt::Display for Application<T> {
+impl std::fmt::Display for Application {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string_pretty(&self).unwrap())
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }

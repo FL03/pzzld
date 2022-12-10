@@ -1,5 +1,9 @@
 version: 2
 updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+        interval: daily
   - package-ecosystem: docker
     directory: /
     schedule:
@@ -9,7 +13,11 @@ updates:
     schedule:
         interval: daily
   - package-ecosystem: cargo
-    directory: /pzzld
+    directory: /bin
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
+    directory: /compilers
     schedule:
         interval: daily
   - package-ecosystem: cargo
@@ -17,10 +25,14 @@ updates:
     schedule:
         interval: daily
   - package-ecosystem: cargo
-    directory: /wallets
+    directory: /gateways
     schedule:
         interval: daily
   - package-ecosystem: cargo
-    directory: /bin/app
+    directory: /pzzld
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
+    directory: /wallets
     schedule:
         interval: daily

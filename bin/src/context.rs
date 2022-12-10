@@ -9,12 +9,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Context {
-    pub settings: Settings,
+    pub cnf: Settings,
 }
 
 impl Context {
-    pub fn new(settings: Settings) -> Self {
-        Self { settings }
+    pub fn new(cnf: Settings) -> Self {
+        Self { cnf }
     }
 }
 
@@ -35,10 +35,6 @@ impl Hashable for Context {
 
 impl std::fmt::Display for Context {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string_pretty(&self.settings).unwrap()
-        )
+        write!(f, "{}", serde_json::to_string(&self.cnf).unwrap())
     }
 }

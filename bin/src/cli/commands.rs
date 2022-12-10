@@ -1,8 +1,7 @@
 /*
     Appellation: commands <module>
-    Contributors: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use clap::Subcommand;
 use scsys::AsyncResult;

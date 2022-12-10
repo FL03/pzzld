@@ -9,3 +9,10 @@ level = "info"
 [server]
 host = "127.0.0.1"
 port = 8888
+
+[services]
+
+[services.oauth]
+auth = ""
+redirect = ""
+token= ""

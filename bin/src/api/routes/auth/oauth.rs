@@ -27,10 +27,10 @@ pub fn router(ctx: crate::Context) -> Router {
 
     Router::new()
         // .route("/auth", get(index))
-        .route("/token/:id", post(token))
-        .route("/auth/jetbrains", get(auth_jbspace))
-        .route("/auth/login", get(login_authorized))
-        .route("/logout", get(logout))
+        .route("/auth/oauth/token/:id", post(token))
+        .route("/auth/oauth/jetbrains", get(auth_jbspace))
+        .route("/auth/oauth/login", get(login_authorized))
+        .route("/auth/oauth/logout", get(logout))
         .layer(Extension(store))
         .layer(Extension(oauth_client))
 }
@@ -47,45 +47,9 @@ pub async fn token(Path(id): Path<usize>) -> Json<Value> {
     Json(data)
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct OAuth2Urls {
-    pub auth: String,
-    pub redirect: String,
-    pub token: String,
-}
-
-impl OAuth2Urls {
-    pub fn new(auth: String, redirect: String, token: String) -> Self {
-        Self {
-            auth,
-            redirect,
-            token,
-        }
-    }
-}
-
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct OAuth2Client {
-    #[serde(rename = "client_id")]
-    pub id: String,
-    #[serde(rename = "client_secret")]
-    pub secret: String,
-}
-
-impl OAuth2Client {
-    pub fn new(id: String, secret: String) -> Self {
-        Self { id, secret }
-    }
-    pub fn from_env(id: Option<&str>, secret: Option<&str>) -> Self {
-        let id = std::env::var(id.unwrap_or("CLIENT_ID")).unwrap_or_default();
-        let secret = std::env::var(secret.unwrap_or("CLIENT_SECRET")).unwrap_or_default();
-        Self::new(id, secret)
-    }
-}
-
 fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
-    let client_id = ctx.settings.client_id.clone();
-    let client_secret = ctx.settings.client_secret;
+    let client_id = ctx.cnf.client_id.clone();
+    let client_secret = ctx.cnf.client_secret;
     let redirect_url =
         std::env::var("REDIRECT_URL").unwrap_or_else(|_| "http://localhost:9000/auth/".to_string());
 
@@ -102,15 +66,6 @@ fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
         Some(TokenUrl::new(token_url).unwrap()),
     )
     .set_redirect_uri(RedirectUrl::new(redirect_url).unwrap())
-}
-
-// The user data we'll get back from Google.
-#[derive(Debug, Serialize, Deserialize)]
-struct User {
-    sub: String,
-    picture: Option<String>,
-    email: String,
-    name: String,
 }
 
 // Session is optional
@@ -216,39 +171,47 @@ impl IntoResponse for AuthRedirect {
     }
 }
 
-// #[async_trait]
-// impl<S, B> FromRequest<S, B> for User
-// where
-//     S: Send + Sync,
-//     B: Send + 'static,
-// {
-//     // If anything goes wrong or no session is found, redirect to the auth page
-//     type Rejection = AuthRedirect;
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+pub struct OAuth2Urls {
+    pub auth: String,
+    pub redirect: String,
+    pub token: String,
+}
 
-//     async fn from_request(req: Request<B>, state: &'_ S) -> Result<Self, Self::Rejection> {
-//         let Extension(store) = Extension::<MemoryStore>::from_request(req, state)
-//             .await
-//             .expect("`MemoryStore` extension is missing");
+impl OAuth2Urls {
+    pub fn new(auth: String, redirect: String, token: String) -> Self {
+        Self {
+            auth,
+            redirect,
+            token,
+        }
+    }
+}
 
-//         let cookies = TypedHeader::<Cookie>::from_request(req, state)
-//             .await
-//             .map_err(|e| match *e.name() {
-//                 header::COOKIE => match e.reason() {
-//                     TypedHeaderRejectionReason::Missing => AuthRedirect,
-//                     _ => panic!("unexpected error getting Cookie header(s): {}", e),
-//                 },
-//                 _ => panic!("unexpected error getting cookies: {}", e),
-//             })?;
-//         let session_cookie = cookies.get(COOKIE_NAME).ok_or(AuthRedirect)?;
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+pub struct OAuth2Client {
+    #[serde(rename = "client_id")]
+    pub id: String,
+    #[serde(rename = "client_secret")]
+    pub secret: String,
+}
 
-//         let session = store
-//             .load_session(session_cookie.to_string())
-//             .await
-//             .unwrap()
-//             .ok_or(AuthRedirect)?;
+impl OAuth2Client {
+    pub fn new(id: String, secret: String) -> Self {
+        Self { id, secret }
+    }
+    pub fn from_env(id: Option<&str>, secret: Option<&str>) -> Self {
+        let id = std::env::var(id.unwrap_or("CLIENT_ID")).unwrap_or_default();
+        let secret = std::env::var(secret.unwrap_or("CLIENT_SECRET")).unwrap_or_default();
+        Self::new(id, secret)
+    }
+}
 
-//         let user = session.get::<User>("user").ok_or(AuthRedirect)?;
-
-//         Ok(user)
-//     }
-// }
+// The user data we'll get back from Google.
+#[derive(Debug, Serialize, Deserialize)]
+struct User {
+    sub: String,
+    picture: Option<String>,
+    email: String,
+    name: String,
+}

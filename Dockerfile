@@ -26,7 +26,7 @@ FROM runner-base as runner
 ENV CLIENT_ID="" \
     CLIENT_SECRET="" \
     RUST_LOG="info" \
-    SERVER_PORT=8080
+    SERVER_PORT=8888
 
 COPY Puzzled.toml ./config/Puzzled.toml
 VOLUME ["/config"]

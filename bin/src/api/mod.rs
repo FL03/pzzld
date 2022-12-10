@@ -12,7 +12,7 @@ pub fn new() -> Api {
 }
 
 pub fn from_context(ctx: crate::Context) -> Api {
-    Api::new(ctx.clone(), ctx.settings.server.port)
+    Api::new(ctx.clone(), ctx.cnf.server.port)
 }
 
 pub(crate) mod interface {
@@ -45,8 +45,8 @@ pub(crate) mod interface {
             // Merge other routers into the base router
             router = router
                 .merge(routes::index::router())
-                .merge(routes::auth::router(self.ctx.clone()))
-                .merge(routes::siwe::router());
+                .merge(routes::auth::oauth(self.ctx.clone()))
+                .merge(routes::auth::siwe());
             router = router
                 .layer(
                     TraceLayer::new_for_http()

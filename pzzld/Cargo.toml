@@ -13,10 +13,11 @@ version = "0.1.0"
 
 [features]
 default = ["core", "wallets"]
-full = ["core", "wallets"]
+full = ["compilers", "core", "gateways", "wallets"]
 
 compilers = ["pzzld-compilers"]
 core = ["pzzld-core"]
+gateways = ["pzzld-gateways"]
 wallets = ["pzzld-wallets"]
 
 [lib]
@@ -30,6 +31,7 @@ test = true
 [dependencies]
 pzzld-compilers = { features = [], optional = true, path = "../compilers", version = "0.1.0" }
 pzzld-core = { features = [], optional = true, path = "../core", version = "0.1.0" }
+pzzld-gateways = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
 pzzld-wallets = { features = [], optional = true, path = "../wallets", version = "0.1.0" }
 
 [package.metadata.docs.rs]
