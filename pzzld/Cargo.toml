@@ -13,7 +13,7 @@ version = "0.1.0"
 
 [features]
 default = ["core", "wallets"]
-full = ["core", "wallets"]
+full = ["compilers", "core", "wallets"]
 
 compilers = ["pzzld-compilers"]
 core = ["pzzld-core"]

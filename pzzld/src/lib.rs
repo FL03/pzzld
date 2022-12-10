@@ -14,7 +14,7 @@ pub mod prelude {
     #[cfg(feature = "compilers")]
     pub use super::compilers::*;
     #[cfg(feature = "core")]
-    pub use super::core::*;
+    pub use super::core::{self, servers::*, signals::*};
     #[cfg(feature = "wallets")]
     pub use super::wallets::*;
 }
