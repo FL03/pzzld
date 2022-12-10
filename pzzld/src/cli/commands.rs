@@ -22,6 +22,8 @@ pub enum Commands {
         up: bool,
     },
     Wallet {
+        #[clap(long = "addr", short, value_parser)]
+        address: Option<String>,
         #[clap(long, short, value_parser)]
         passphrase: Option<String>,
 
@@ -54,7 +56,13 @@ impl Commands {
         Ok(self)
     }
     pub async fn handle_wallet(&self) -> AsyncResult<&Self> {
-        if let Self::Wallet { passphrase, new } = self.clone() {
+        if let Self::Wallet {
+            address,
+            passphrase,
+            new,
+        } = self.clone()
+        {
+            if address.is_none() {}
             if passphrase.is_none() && new {
                 let mut mnemonic = pzzld::wallets::mnemonics::Mnemonic::new(None, None);
                 mnemonic.generate(None).await?;

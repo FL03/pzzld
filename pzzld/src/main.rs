@@ -50,16 +50,16 @@ impl Application {
         tracing_subscriber::fmt::init();
         Ok(self)
     }
-    pub fn set_state(&mut self, state: State) -> &Self {
-        self.state = Arc::new(state);
-        self
-    }
     pub async fn run(&mut self) -> AsyncResult<&Self> {
         self.setup().await?;
         let cli = cli::new();
         tracing::info!("Success: Commands parsed, processing requests...");
         cli.handler().await?;
         Ok(self)
+    }
+    pub fn update_state(&mut self, state: State) -> &Self {
+        self.state = Arc::new(state);
+        self
     }
 }
 

@@ -13,6 +13,4 @@ pub fn fnl_remove<T: Clone + ToString>(data: T) -> String {
     chars.as_str().to_string()
 }
 
-pub fn remove_dir_all() {
-    
-}
+pub fn remove_dir_all() {}

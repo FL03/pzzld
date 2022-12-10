@@ -6,10 +6,8 @@
 pub use self::{constants::*, types::*};
 
 pub(crate) mod constants {
-    
+
     pub const DEFAULT_WORKDIR: &str = ".";
 }
 
-pub(crate) mod types {
-
-}
+pub(crate) mod types {}

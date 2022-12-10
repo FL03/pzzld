@@ -21,6 +21,7 @@ test = true
 [dependencies]
 async-trait = "0.1.59"
 axum = "0.6.1"
+clap = { features = ["derive"], version = "4.0.29" }
 hyper = { features = ["full"], version = "0.14.23" }
 http = "0.2.8"
 http-body = "0.4.5"
