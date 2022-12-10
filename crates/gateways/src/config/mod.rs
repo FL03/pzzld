@@ -13,7 +13,7 @@ pub(crate) mod settings {
     use s3::{creds::Credentials, Region};
     use scsys::prelude::{
         config::{Config, Environment},
-        try_collect_config_files, ConfigResult, AsyncResult,
+        try_collect_config_files, AsyncResult, ConfigResult,
     };
     use serde::{Deserialize, Serialize};
 

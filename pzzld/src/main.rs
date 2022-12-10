@@ -48,8 +48,6 @@ impl Application {
         // Initialize the logger
         self.clone().cnf.logger.unwrap_or_default().setup(None);
         tracing_subscriber::fmt::init();
-
-        tracing::info!("Success: Application initialized and awaiting commands");
         Ok(self)
     }
     pub fn set_state(&mut self, state: State) -> &Self {

@@ -21,6 +21,8 @@ FROM debian:buster-slim as runner-base
 
 RUN apt-get update -y && apt-get upgrade -y 
 
+RUN apt-get install -y libssl-dev protobuf-compiler
+
 FROM runner-base as runner
 
 ENV CLIENT_ID="" \

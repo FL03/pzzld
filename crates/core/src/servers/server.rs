@@ -3,8 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use hyper::server::{conn::AddrIncoming, Builder};
-use scsys::AsyncResult;
+use super::{ServerOperators, ServerSpec};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 
@@ -21,22 +20,21 @@ impl Server {
             port: port.unwrap_or(8080),
         }
     }
-    /// Create a new [std::net::SocketAddr] instance from the provided port
-    pub fn address(&self) -> SocketAddr {
-        SocketAddr::from(([127, 0, 0, 1], self.port))
-    }
-    /// Creates a new builder instance with the address created from the given port
-    pub fn builder(&self) -> Builder<AddrIncoming> {
-        hyper::Server::bind(&self.address())
+}
+
+impl ServerOperators for Server {
+    fn host(&self) -> [u8; 4] {
+        self.host
     }
 
-    /// Serves the client
-    pub async fn serve(&self, client: axum::Router) -> AsyncResult {
-        self.builder()
-            .serve(client.into_make_service())
-            .with_graceful_shutdown(crate::signals::shutdown::shutdown())
-            .await?;
-        Ok(())
+    fn port(&self) -> u16 {
+        self.port
+    }
+}
+
+impl ServerSpec for Server {
+    fn address(&self) -> SocketAddr {
+        SocketAddr::from((self.host, self.port))
     }
 }
 

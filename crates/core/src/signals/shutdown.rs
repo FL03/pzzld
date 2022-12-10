@@ -4,13 +4,15 @@
     Description: ... Summary ...
 */
 
+/// Simple function wrapper for [tokio::signal::ctrl_c]
 pub async fn shutdown() {
-    tracing::info!("Signal received; initiating shutdown procedures...");
     tokio::signal::ctrl_c()
         .await
         .expect("Expect shutdown signal handler");
+    tracing::info!("Signal received; initiating shutdown procedures...");
 }
 
+/// An objective interface for extending structure functionality to include graceful shutdown procedures
 #[async_trait::async_trait]
 pub trait GracefulShutdown {
     async fn shutdown() {
