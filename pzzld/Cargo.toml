@@ -6,33 +6,48 @@ edition = "2021"
 homepage = "https://github.com/FL03/pzzld/wiki"
 keywords = []
 license = "Apache-2.0"
-name = "pzzld"
-readme = "README.md"
+name = "pzzld-bin"
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 
-[features]
-default = ["core", "wallets"]
-full = ["compilers", "core", "gateways", "wallets"]
-
-compilers = ["pzzld-compilers"]
-core = ["pzzld-core"]
-gateways = ["pzzld-gateways"]
-wallets = ["pzzld-wallets"]
-
-[lib]
-crate-type = ["cdylib", "rlib"]
-test = true
+[[bin]]
+name = "pzzld"
+path = "src/main.rs"
 
 [build-dependencies]
 
 [dev-dependencies]
 
+
 [dependencies]
-pzzld-compilers = { features = [], optional = true, path = "../compilers", version = "0.1.0" }
-pzzld-core = { features = [], optional = true, path = "../core", version = "0.1.0" }
-pzzld-gateways = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
-pzzld-wallets = { features = [], optional = true, path = "../wallets", version = "0.1.0" }
+async-session = "3.0.0"
+axum = { features = ["headers", "http2", "ws"], version = "0.6.1" }
+clap = { features = ["derive"], version = "4.0.29" }
+futures = "0.3.25"
+glob = "0.3.0"
+http = "0.2.8"
+hyper = { features = ["full"], version = "0.14.23" }
+oauth2 = "4.3.0"
+opentelemetry = { features = ["rt-tokio"], version = "0.18.0" }
+opentelemetry-jaeger = { features = ["full"], version = "0.17.0" }
+reqwest = { features = ["json", "rustls-tls", "stream"], version = "0.11.12" }
+scsys = { features = ["full"], version = "0.1.36" }
+serde = { features = ["derive"], version = "1.0.149" }
+serde_json = "1.0.89"
+siwe = "0.5.0"
+strum = { features = ["derive"], version = "0.24.1" }
+tokio = { features = ["full"], version = "1.23.0" }
+tokio-stream = "0.1.11"
+tower = "0.4.13"
+tower-cookies = "0.8.0"
+tower-http = { features = ["full"], version = "0.3.5" }
+tracing = "0.1.36"
+tracing-opentelemetry = "0.18.0"
+tracing-subscriber = { features = ["env-filter"], version = "0.3.16" }
+utoipa = { features = ["axum_extras", "serde_json", "serde_yaml"], version = "2.4.2" }
+utoipa-swagger-ui = { features = ["axum"], version = "3.0.1" }
+
+pzzld = { features = ["full"], path = "../crates/sdk", version = "0.1.0" }
 
 [package.metadata.docs.rs]
 all-features = true

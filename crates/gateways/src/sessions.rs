@@ -5,7 +5,6 @@
 */
 use scsys::prelude::{Id, Timestamp};
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Session {

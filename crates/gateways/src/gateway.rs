@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use super::{GatewayConfig, GatewayCreds, S3Region};
+use crate::config::{GatewayConfig, GatewayCreds, S3Region};
 use s3::{creds::Credentials, error::S3Error, Bucket, Region};
 use serde::{Deserialize, Serialize};
 use std::convert::From;

@@ -13,26 +13,26 @@ updates:
     schedule:
         interval: daily
   - package-ecosystem: cargo
-    directory: /bin
-    schedule:
-        interval: daily
-  - package-ecosystem: cargo
-    directory: /compilers
-    schedule:
-        interval: daily
-  - package-ecosystem: cargo
-    directory: /core
-    schedule:
-        interval: daily
-  - package-ecosystem: cargo
-    directory: /gateways
-    schedule:
-        interval: daily
-  - package-ecosystem: cargo
     directory: /pzzld
     schedule:
         interval: daily
   - package-ecosystem: cargo
-    directory: /wallets
+    directory: /crates/compilers
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
+    directory: /crates/core
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
+    directory: /crates/gateways
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
+    directory: /crates/pzzld
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
+    directory: /crates/wallets
     schedule:
         interval: daily

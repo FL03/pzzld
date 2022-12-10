@@ -11,6 +11,10 @@ pub(crate) mod regions;
 pub(crate) mod settings {
     use super::*;
     use s3::{creds::Credentials, Region};
+    use scsys::prelude::{
+        config::{Config, Environment},
+        try_collect_config_files, ConfigResult, AsyncResult,
+    };
     use serde::{Deserialize, Serialize};
 
     #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
