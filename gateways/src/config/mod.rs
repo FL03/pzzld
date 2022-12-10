@@ -11,7 +11,6 @@ pub(crate) mod regions;
 pub(crate) mod settings {
     use super::*;
     use s3::{creds::Credentials, Region};
-    use scsys::AsyncResult;
     use serde::{Deserialize, Serialize};
 
     #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -35,6 +34,26 @@ pub(crate) mod settings {
                 endpoint,
                 region,
             }
+        }
+        pub fn build() -> ConfigResult<Self> {
+            let mut builder = Config::builder()
+                .add_source(Environment::default().prefix("S3").separator("_"))
+                .set_default("access_key", "")?
+                .set_default("secret_key", "")?
+                .set_default("endpoint", "https://gateway.storjshare.io")?
+                .set_default("region", "us-east-1")?;
+
+            if let Ok(v) = try_collect_config_files("**/*.config.*", false) {
+                builder = builder.add_source(v);
+            };
+            if let Ok(v) = std::env::var("S3_ACCESS_KEY") {
+                builder = builder.set_override("access_key", v)?;
+            }
+            if let Ok(v) = std::env::var("S3_SECRET_KEY") {
+                builder = builder.set_override("secret_key", v)?;
+            }
+
+            builder.build()?.try_deserialize()
         }
         pub fn partial_env(
             access_key: Option<&str>,

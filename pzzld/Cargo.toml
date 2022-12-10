@@ -12,7 +12,7 @@ repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 
 [features]
-default = ["core", "gateways", "wallets"]
+default = ["core", "wallets"]
 full = ["compilers", "core", "gateways", "wallets"]
 
 compilers = ["pzzld-compilers"]

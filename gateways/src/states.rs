@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use scsys::prelude::{Id, Timestamp};
+use scsys::prelude::{Id, Message, Timestamp};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
@@ -21,7 +21,7 @@ pub enum State {
 }
 
 impl State {
-    pub fn into_message(&self) -> scsys::prelude::Message<Self> {
+    pub fn into_message(&self) -> Message<Self> {
         self.clone().into()
     }
     pub fn boxed(&self) -> Box<&Self> {
