@@ -3,11 +3,11 @@ dist = "dist"
 filehash = true
 public_url = "/"
 release = false
-target = "curiosity/index.html"
+target = "wasm/index.html"
 
-[watch]
-watch = []
-ignore = []
+[clean]
+cargo = false
+dist = "dist"
 
 [serve]
 address = "127.0.0.1"
@@ -15,16 +15,16 @@ no_autoreload = false
 open = false
 port = 8000
 
-[clean]
-cargo = false
-dist = "dist"
-
 [tools]
 sass = "1.54.9"
 wasm_bindgen = "0.2.83"
 wasm_opt = "version_110"
 
+[watch]
+watch = []
+ignore = []
+
 [[hooks]]
-command = "echo"
-command_arguments = ["Hello", "Trunk!"]
+command = "sh"
+command_arguments = ["-c", "cargo build --release -p pzzld"]
 stage = "pre_build"
