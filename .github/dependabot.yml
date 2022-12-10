@@ -13,7 +13,15 @@ updates:
     schedule:
         interval: daily
   - package-ecosystem: cargo
+    directory: /desktop
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
     directory: /pzzld
+    schedule:
+        interval: daily
+  - package-ecosystem: cargo
+    directory: /wasm
     schedule:
         interval: daily
   - package-ecosystem: cargo

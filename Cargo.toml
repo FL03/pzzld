@@ -1,11 +1,13 @@
 [workspace]
 default-members = [
     "pzzld",
+    "wasm"
 ]
-
+exclude = ["desktop"]
 members = [
     "crates/*",
-    "pzzld"
+    "pzzld",
+    "wasm"
 ]
 
 [profile.dev]

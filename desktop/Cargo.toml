@@ -1,0 +1,24 @@
+[package]
+authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
+categories = []
+description = "curiosity"
+edition = "2021"
+homepage = "https://github.com/FL03/curiosity/wiki"
+keywords = ["wasm"]
+license = "Apache-2.0"
+name = "curiosity-desktop"
+readme = "README.md"
+repository = "https://github.com/FL03/curiosity"
+version = "0.1.0"
+
+[features]
+default = [ "custom-protocol" ]
+custom-protocol = [ "tauri/custom-protocol" ]
+
+[build-dependencies]
+tauri-build = { version = "1.2", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.2", features = ["api-all"] }

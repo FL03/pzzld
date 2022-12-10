@@ -1,0 +1,69 @@
+{
+  "package": {
+    "productName": "pzzld.eth",
+    "version": "0.1.0"
+  },
+  "build": {
+    "beforeBuildCommand": "cargo build --release -p pzzld && trunk build --release",
+    "beforeDevCommand": "trunk serve",
+    "distDir": "../dist",
+    "devPath": "http://localhost:8000",
+    "withGlobalTauri": true
+  },
+  "tauri": {
+    "allowlist": {
+      "all": true
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "eth.pzzld",
+      "externalBin": [
+        "../target/release/pzzld"
+      ],
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "resources": [],
+      "copyright": "",
+      "category": "DeveloperTool",
+      "shortDescription": "",
+      "longDescription": "",
+      "deb": {
+        "depends": []
+      },
+      "macOS": {
+        "frameworks": [],
+        "minimumSystemVersion": "",
+        "exceptionDomain": "localhost",
+        "signingIdentity": null,
+        "providerShortName": null,
+        "entitlements": null
+      },
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": ""
+      }
+    },
+    "security": {
+      "csp": null
+    },
+    "updater": {
+      "active": false
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "resizable": true,
+        "title": "Puzzled",
+        "height": 600,
+        "width": 800
+      }
+    ]
+  }
+}
