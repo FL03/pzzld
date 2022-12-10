@@ -17,4 +17,5 @@ pub mod prelude {
     pub use super::core::{self, servers::*, signals::*};
     #[cfg(feature = "wallets")]
     pub use super::wallets::*;
+    pub use super::*;
 }

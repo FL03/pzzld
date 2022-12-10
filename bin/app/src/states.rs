@@ -3,35 +3,45 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use scsys::{
-    prelude::{Message, Stateful},
-    Timestamp,
-};
+use pzzld::core::fnl_remove;
 use serde::{Deserialize, Serialize};
 use strum::{EnumString, EnumVariantNames};
 
 #[derive(
-    Clone, Debug, Deserialize, EnumString, EnumVariantNames, Eq, Hash, PartialEq, Serialize,
+    Clone, Copy, Debug, Deserialize, EnumString, EnumVariantNames, Eq, Hash, PartialEq, Serialize,
 )]
 #[strum(serialize_all = "snake_case")]
-pub enum State<T: Default + std::fmt::Display> {
-    Request {
-        msg: Message<T>
-    },
-    Response {
-        msg: Message<T>
-    },
+pub enum State {
+    Request,
+    Response,
     Idle,
 }
 
-impl<T: Default + std::fmt::Display> Default for State<T> {
+impl Default for State {
     fn default() -> Self {
         Self::Idle
     }
 }
 
-impl<T: Default + Serialize + std::fmt::Display> std::fmt::Display for State<T> {
+impl std::fmt::Display for State {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap())
+        write!(
+            f,
+            "{}",
+            fnl_remove(serde_json::to_string(&self).unwrap()).to_ascii_lowercase()
+        )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_state() {
+        let a = State::default();
+        let b = State::try_from("idle").ok().unwrap();
+        assert_eq!(a, b);
+        assert_eq!(a.to_string(), "idle".to_string())
     }
 }
