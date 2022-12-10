@@ -3,7 +3,7 @@
    Contrib: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-use super::{Eventful, EventSpec};
+use super::{EventSpec, Eventful};
 use scsys::prelude::Message;
 use serde::{Deserialize, Serialize};
 
@@ -19,7 +19,7 @@ impl Eventful for Events {
 
     fn event(&self) -> Self::Event {
         self.into()
-    }   
+    }
 }
 
 impl Default for Events {
@@ -40,12 +40,14 @@ impl std::convert::From<&Events> for Event {
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Event {
-    pub message: Message
+    pub message: Message,
 }
 
 impl Event {
     pub fn new(message: Option<Message>) -> Self {
-        Self { message: message.unwrap_or_default() }
+        Self {
+            message: message.unwrap_or_default(),
+        }
     }
 }
 
@@ -55,13 +57,12 @@ impl Default for Event {
     }
 }
 
-
 impl Eventful for Event {
     type Event = Self;
 
     fn event(&self) -> Self::Event {
         self.clone()
-    }   
+    }
 }
 
 impl EventSpec for Event {
@@ -71,7 +72,6 @@ impl EventSpec for Event {
         &self.message
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -83,5 +83,4 @@ mod tests {
         let b = Events::Startup(Default::default());
         assert_ne!(&a, &b);
     }
-
 }

@@ -7,6 +7,4 @@ pub use self::{proxy::*, specs::*};
 
 pub(crate) mod proxy;
 
-pub(crate) mod specs {
-    
-}
+pub(crate) mod specs {}

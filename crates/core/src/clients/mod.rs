@@ -7,6 +7,4 @@ pub use self::{client::*, specs::*};
 
 pub(crate) mod client;
 
-pub(crate) mod specs {
-    
-}
+pub(crate) mod specs {}
