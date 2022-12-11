@@ -2,7 +2,9 @@
 default-members = [
     "pzzld"
 ]
-exclude = ["desktop", "wasm"]
+exclude = [
+    
+]
 members = [
     "crates/*",
     "pzzld"

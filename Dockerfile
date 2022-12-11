@@ -26,8 +26,6 @@ ADD . /app
 WORKDIR /app
 
 COPY . .
-COPY --chown=55 ../.config config
-VOLUME ["/config"]
 RUN cargo build --release -v --workspace
 
 FROM debian:buster-slim as runner-base
@@ -41,7 +39,7 @@ FROM runner-base as runner
 ENV CLIENT_ID="" \
     CLIENT_SECRET="" \
     RUST_LOG="info" \
-    SERVER_PORT=8888
+    SERVER_PORT=8080
 
 COPY --chown=55 --from=cached config config
 VOLUME ["/config"]

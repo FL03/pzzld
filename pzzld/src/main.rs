@@ -46,7 +46,7 @@ impl Application {
     }
     pub async fn setup(&mut self) -> AsyncResult<&Self> {
         // Initialize the logger
-        self.clone().cnf.logger.unwrap_or_default().setup(None);
+        self.clone().cnf.logger.setup(None);
         tracing_subscriber::fmt::init();
         Ok(self)
     }

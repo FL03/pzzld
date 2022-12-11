@@ -16,7 +16,7 @@ pub struct Settings {
     pub(crate) client_secret: String,
     pub mode: String,
     pub name: String,
-    pub logger: Option<Logger>,
+    pub logger: Logger,
     pub server: Server,
 }
 
@@ -26,10 +26,10 @@ impl Settings {
             .add_source(Environment::default().separator("__"))
             .set_default("mode", "production")?
             .set_default("name", "Puzzled")?
-            .set_default("logger.level", Some("info"))?
+            .set_default("logger.level", "info")?
             .set_default("server.host", "127.0.0.1")?
             .set_default("server.port", 8888)?;
-        if let Ok(v) = try_collect_config_files("**/Puzzled.toml", false) {
+        if let Ok(v) = try_collect_config_files("**/*.config.*", false) {
             builder = builder.add_source(v);
         }
         if let Ok(v) = try_collect_config_files("**/*.config.*", false) {
@@ -69,7 +69,7 @@ impl Default for Settings {
                 client_secret: Default::default(),
                 mode: "production".to_string(),
                 name: "Flow".to_string(),
-                logger: Some(Logger::default()),
+                logger: Logger::default(),
                 server: Server::new("127.0.0.1".to_string(), 8888),
             },
         }
