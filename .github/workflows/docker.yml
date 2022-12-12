@@ -15,14 +15,8 @@ env:
 
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        dockerfile:
-          - pzzld/Dockerfile
-          - wasm/Dockerfile
     steps:
     - uses: actions/checkout@v3
     - name: Publish to Registry
@@ -31,4 +25,5 @@ jobs:
         name: ${{ env.IMAGE_NAME }}
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-        dockerfile: ${{ matrix.dockerfile }}
+        dockerfile: Dockerfile
+        snapshot: true
