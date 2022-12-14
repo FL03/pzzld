@@ -13,6 +13,7 @@ pub fn router() -> Router {
     // .route("/siwe/verify/", post(validate_message))
 }
 
+///
 pub async fn generate_nonce() -> Json<Value> {
     let nonce = siwe::generate_nonce();
     let payload = json!({ "nonce": nonce });
@@ -21,24 +22,8 @@ pub async fn generate_nonce() -> Json<Value> {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct SiweMessage {
-    pub domain: String,
-    pub address: [u8; 20],
-    pub statement: Option<String>,
-    pub uri: String,
-    pub version: String,
-    pub chain_id: u64,
-    pub nonce: String,
-    pub issued_at: Timestamp,
-    pub expiration_time: Option<Timestamp>,
-    pub not_before: Option<Timestamp>,
-    pub request_id: Option<String>,
-    pub resources: Vec<Timestamp>,
-}
-
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct MessageValidation {
-    pub message: SiweMessage,
+    pub message: String,
     pub signature: Vec<u8>,
 }
 

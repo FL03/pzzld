@@ -12,10 +12,8 @@ use axum::{
     routing::{get, post},
     Json, Router,
 };
-use oauth2::{
-    basic::BasicClient, reqwest::async_http_client, AuthUrl, AuthorizationCode, ClientId,
-    ClientSecret, CsrfToken, RedirectUrl, Scope, TokenResponse, TokenUrl,
-};
+use oauth2::{basic::BasicClient, reqwest::async_http_client};
+use oauth2::{AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, RedirectUrl, Scope, TokenResponse, TokenUrl};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
@@ -33,6 +31,18 @@ pub fn router(ctx: crate::Context) -> Router {
         .route("/auth/oauth/logout", get(logout))
         .layer(Extension(store))
         .layer(Extension(oauth_client))
+}
+
+// Session is optional
+async fn index(user: Option<User>) -> impl IntoResponse {
+    let msg = match user {
+        Some(u) => format!(
+            "Hey {}! You're logged in!\nYou may now access `/protected`.\nLog out with `/logout`.",
+            u.name
+        ),
+        None => "You're not logged in.\nVisit `/auth/google` to do so.".to_string(),
+    };
+    scsys::prelude::Message::new(vec![msg]).to_string()
 }
 
 /// Implements the authorization url following the OAuth2 specification
@@ -68,17 +78,7 @@ fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
     .set_redirect_uri(RedirectUrl::new(redirect_url).unwrap())
 }
 
-// Session is optional
-async fn index(user: Option<User>) -> impl IntoResponse {
-    let msg = match user {
-        Some(u) => format!(
-            "Hey {}! You're logged in!\nYou may now access `/protected`.\nLog out with `/logout`.",
-            u.name
-        ),
-        None => "You're not logged in.\nVisit `/auth/google` to do so.".to_string(),
-    };
-    scsys::prelude::Message::new(vec![msg]).to_string()
-}
+
 
 async fn auth_jbspace(Extension(client): Extension<BasicClient>) -> impl IntoResponse {
     let (auth_url, _csrf_token) = client

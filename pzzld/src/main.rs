@@ -14,7 +14,6 @@ pub(crate) mod states;
 
 use pzzld::core::servers::Server;
 use scsys::AsyncResult;
-use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 #[tokio::main]
@@ -24,7 +23,7 @@ async fn main() -> AsyncResult {
     Ok(())
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default)]
 pub struct Application {
     pub cnf: Settings,
     pub ctx: Context,
@@ -65,6 +64,6 @@ impl Application {
 
 impl std::fmt::Display for Application {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap())
+        write!(f, "{}", format!("view the application locally at http://localhost:{}", self.cnf.server.port))
     }
 }
