@@ -66,7 +66,7 @@ impl Commands {
         {
             if address.is_none() {}
             if passphrase.is_none() && new {
-                tokio::spawn(create_new_wallet());
+                create_new_wallet().await;
             }
         };
 
