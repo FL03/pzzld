@@ -13,7 +13,10 @@ use axum::{
     Json, Router,
 };
 use oauth2::{basic::BasicClient, reqwest::async_http_client};
-use oauth2::{AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, RedirectUrl, Scope, TokenResponse, TokenUrl};
+use oauth2::{
+    AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, RedirectUrl, Scope,
+    TokenResponse, TokenUrl,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
@@ -77,8 +80,6 @@ fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
     )
     .set_redirect_uri(RedirectUrl::new(redirect_url).unwrap())
 }
-
-
 
 async fn auth_jbspace(Extension(client): Extension<BasicClient>) -> impl IntoResponse {
     let (auth_url, _csrf_token) = client

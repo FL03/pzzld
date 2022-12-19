@@ -29,8 +29,8 @@ impl BIP0039 {
     }
     pub fn from_file() -> Option<Self> {
         if let Ok(paths) = try_collect_files("**/BIP0039/english.txt") {
-            if paths.len() > 0 {
-                Some(Self::from(extract_file_from_path(&paths[0])));
+            if !paths.is_empty() {
+                Self::from(extract_file_from_path(&paths[0]));
             }
         }
         None

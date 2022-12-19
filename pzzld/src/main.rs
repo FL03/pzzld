@@ -64,6 +64,13 @@ impl Application {
 
 impl std::fmt::Display for Application {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", format!("view the application locally at http://localhost:{}", self.cnf.server.port))
+        write!(
+            f,
+            "{}",
+            format!(
+                "view the application locally at http://localhost:{}",
+                self.cnf.server.port
+            )
+        )
     }
 }

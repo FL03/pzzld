@@ -17,8 +17,8 @@ pub struct Mnemonic {
 impl Mnemonic {
     pub fn new(mnemonic: Option<Vec<String>>, passphrase: Option<Passphrase>) -> Self {
         Self {
-            mnemonic: mnemonic.unwrap_or(Vec::new()),
-            passphrase: passphrase.unwrap_or(Passphrase::default()),
+            mnemonic: mnemonic.unwrap_or_default(),
+            passphrase: passphrase.unwrap_or_default(),
         }
     }
     pub async fn generate(&mut self, lang: Option<Language>) -> AsyncResult<&Self> {
@@ -50,7 +50,7 @@ impl From<Passphrase> for Mnemonic {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    
 
     // #[test]
     // fn test_mnemonic() {

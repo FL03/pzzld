@@ -5,23 +5,22 @@
 */
 use pzzld::core::fnl_remove;
 use serde::{Deserialize, Serialize};
-use std::convert::From;
+
 use strum::{EnumString, EnumVariantNames};
 
 pub trait Stateful {
-    fn by_ref(self: &Self) -> Self where Self: Sized;
-    fn state(&self) -> Self where Self: Sized;
+    fn by_ref(&self) -> Self
+    where
+        Self: Sized;
+    fn state(&self) -> Self
+    where
+        Self: Sized;
 }
 
-
-#[derive(
-    Clone, Debug, Deserialize, EnumString, EnumVariantNames, Eq, PartialEq, Serialize,
-)]
+#[derive(Clone, Debug, Deserialize, EnumString, EnumVariantNames, Eq, PartialEq, Serialize)]
 #[strum(serialize_all = "snake_case")]
 pub enum State {
-    Request {
-        methods: serde_json::Value
-    },
+    Request { methods: serde_json::Value },
     Response,
     Idle,
 }
