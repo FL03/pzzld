@@ -1,12 +1,12 @@
 FROM scratch as cached
 
-COPY --chown=55 ../.config config
+COPY --chown=55 .config config
 VOLUME ["/config"]
 
 RUN mkdir data
 VOLUME ["/data"]
 
-COPY --chown=55 .. /workspace
+COPY --chown=55 . /workspace
 VOLUME ["/workspace"]
 
 FROM rust:latest as base
