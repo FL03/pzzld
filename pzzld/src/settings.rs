@@ -28,7 +28,7 @@ impl Settings {
             .set_default("name", "Puzzled")?
             .set_default("logger.level", "info")?
             .set_default("server.host", "127.0.0.1")?
-            .set_default("server.port", 8888)?;
+            .set_default("server.port", 8080)?;
         if let Ok(v) = try_collect_config_files("**/*.config.*", false) {
             builder = builder.add_source(v);
         }
@@ -70,7 +70,7 @@ impl Default for Settings {
                 mode: "production".to_string(),
                 name: "Flow".to_string(),
                 logger: Logger::default(),
-                server: Server::new("127.0.0.1".to_string(), 8888),
+                server: Server::new("127.0.0.1".to_string(), 8080),
             },
         }
     }

@@ -4,8 +4,10 @@
     Description: ... Summary ...
 */
 use clap::Subcommand;
+use pzzld::wallets::mnemonics::Mnemonic;
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
+use tokio::task::JoinHandle;
 
 #[derive(Clone, Debug, Deserialize, Hash, PartialEq, Eq, Serialize, Subcommand)]
 pub enum Commands {
@@ -64,10 +66,7 @@ impl Commands {
         {
             if address.is_none() {}
             if passphrase.is_none() && new {
-                let mut mnemonic = pzzld::wallets::mnemonics::Mnemonic::new(None, None);
-                mnemonic.generate(None).await?;
-
-                println!("{:?}", mnemonic);
+                tokio::spawn(create_new_wallet());
             }
         };
 
@@ -83,4 +82,13 @@ impl Commands {
         };
         Ok(self)
     }
+}
+
+
+pub async fn create_new_wallet() -> Mnemonic {
+    let mut mnemonic = Mnemonic::new(None, None);
+    mnemonic.generate(None).await.ok().unwrap();
+
+    println!("{:?}", mnemonic);
+    mnemonic.clone()
 }
