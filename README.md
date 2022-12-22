@@ -35,7 +35,7 @@ docker pull jo3mccain/pzzld:latest
 #### _Run the image_
 
 ```bash
-docker run -p 8888:8888
+docker run -p 8080:8080 jo3mccain/pzzld:latest system --up
 ```
 
 ### Usage
