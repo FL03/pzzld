@@ -50,7 +50,6 @@ impl From<Passphrase> for Mnemonic {
 
 #[cfg(test)]
 mod tests {
-    
 
     // #[test]
     // fn test_mnemonic() {
