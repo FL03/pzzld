@@ -1,7 +1,6 @@
 # pzzld
 
 [![Clippy](https://github.com/FL03/pzzld/actions/workflows/clippy.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/clippy.yml)
-[![Desktop](https://github.com/FL03/pzzld/actions/workflows/desktop.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/desktop.yml)
 [![Docker](https://github.com/FL03/pzzld/actions/workflows/docker.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/docker.yml)
 [![Rust](https://github.com/FL03/pzzld/actions/workflows/rust.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/rust.yml)
 
@@ -21,8 +20,22 @@ git clone https://github.com/FL03/pzzld
 
 ### Docker
 
+#### _Build the image locally_
+
 ```bash
 docker buildx build --tag pzzld:latest .
+```
+
+#### _Pull the pre-built image_
+
+```bash
+docker pull jo3mccain/pzzld:latest
+```
+
+#### _Run the image_
+
+```bash
+docker run -p 8888:8888
 ```
 
 ### Usage

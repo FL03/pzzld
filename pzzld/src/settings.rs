@@ -32,9 +32,6 @@ impl Settings {
         if let Ok(v) = try_collect_config_files("**/*.config.*", false) {
             builder = builder.add_source(v);
         }
-        if let Ok(v) = try_collect_config_files("**/*.config.*", false) {
-            builder = builder.add_source(v);
-        }
         if let Ok(v) = std::env::var("CLIENT_ID") {
             builder = builder.set_override("client_id", v)?;
         }
@@ -68,7 +65,7 @@ impl Default for Settings {
                 client_id: Default::default(),
                 client_secret: Default::default(),
                 mode: "production".to_string(),
-                name: "Flow".to_string(),
+                name: "Puzzled".to_string(),
                 logger: Logger::default(),
                 server: Server::new("127.0.0.1".to_string(), 8080),
             },
