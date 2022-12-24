@@ -3,7 +3,8 @@ default-members = [
     "pzzld"
 ]
 exclude = [
-    "xtask"
+    "wasm",
+    "xtask",
 ]
 members = [
     "crates/*",

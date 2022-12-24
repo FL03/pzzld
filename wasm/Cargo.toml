@@ -6,33 +6,32 @@ edition = "2021"
 homepage = "https://github.com/FL03/pzzld/wiki"
 keywords = []
 license = "Apache-2.0"
-name = "pzzld-core"
+name = "pzzld-wasm"
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = [ "cdylib", "rlib" ]
 test = true
 
 [build-dependencies]
+substrate-wasm-builder = "5.0.0"
 
 [dev-dependencies]
 
 [dependencies]
-async-trait = "0.1.59"
-axum = "0.6.1"
-clap = { features = ["derive"], version = "4.0.29" }
-hyper = { features = ["full"], version = "0.14.23" }
-http = "0.2.8"
-http-body = "0.4.5"
-scsys = { features = ["full"], version = "0.1.38" }
+futures = "0.3.25"
+gloo = { features = [ "futures" ], version = "0.8" }
+js-sys = { features = [], version = "0.3.60" }
 serde = { features = ["derive"], version = "1" }
 serde_json = "1"
 strum = { features = ["derive"], version = "0.24.1" }
-tokio = { features = ["macros", "signal"], version = "1.23.0" }
-tracing = { features = [], version = "0.1.37" }
-
+wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2.83"}
 
 [package.metadata.docs.rs]
 all-features = true
 rustc-args = ["--cfg", "docsrs"]
+
+[target.wasm32-unknown-unknown]
+
+[target.wasm32-wasi]

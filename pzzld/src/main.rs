@@ -3,7 +3,7 @@
    Contrib: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::{context::*, settings::*, states::*};
+pub use self::{context::*, settings::*, states::States};
 
 pub mod api;
 pub mod cli;
@@ -13,7 +13,7 @@ pub(crate) mod settings;
 pub(crate) mod states;
 
 use pzzld::core::servers::Server;
-use scsys::AsyncResult;
+use scsys::prelude::{AsyncResult, State};
 use std::sync::Arc;
 
 #[tokio::main]
@@ -28,7 +28,7 @@ pub struct Application {
     pub cnf: Settings,
     pub ctx: Context,
     pub server: Arc<Server>,
-    pub state: Arc<State>,
+    pub state: Arc<State<States>>,
 }
 
 impl Application {
@@ -56,7 +56,7 @@ impl Application {
         cli.handler().await?;
         Ok(self)
     }
-    pub fn update_state(&mut self, state: State) -> &Self {
+    pub fn update_state(&mut self, state: State<States>) -> &Self {
         self.state = Arc::new(state);
         self
     }
