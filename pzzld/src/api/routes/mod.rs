@@ -6,4 +6,4 @@
 
 pub mod auth;
 pub mod index;
-pub mod statics;
+pub mod wasm;

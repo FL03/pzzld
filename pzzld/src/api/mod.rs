@@ -45,7 +45,7 @@ pub(crate) mod interface {
             // Merge other routers into the base router
             router = router
                 .merge(routes::index::router())
-                .merge(routes::statics::router())
+                .merge(routes::wasm::router())
                 .merge(routes::auth::oauth(self.ctx.clone()))
                 .merge(routes::auth::siwe());
             router = router
