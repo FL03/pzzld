@@ -6,19 +6,16 @@ edition = "2021"
 homepage = "https://github.com/FL03/pzzld/wiki"
 keywords = []
 license = "Apache-2.0"
-name = "pzzld"
+name = "pzzld-sdk"
 readme = "README.md"
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 
 [features]
-default = ["core", "wallets"]
-full = ["compilers", "core", "gateways", "pipelines", "wallets"]
+default = [ "core", "wallets" ]
+full = [ "wallets" ]
 
-compilers = ["pzzld-compilers"]
-core = ["pzzld-core"]
-gateways = ["pzzld-gateways"]
-pipelines = ["pzzld-pipelines"]
+core = [ ]
 wallets = ["pzzld-wallets"]
 
 [lib]
@@ -30,10 +27,6 @@ test = true
 [dev-dependencies]
 
 [dependencies]
-pzzld-compilers = { features = [], optional = true, path = "../compilers", version = "0.1.0" }
-pzzld-core = { features = [], optional = true, path = "../core", version = "0.1.0" }
-pzzld-gateways = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
-pzzld-pipelines = { features = [], optional = true, path = "../pipelines", version = "0.1.0" }
 pzzld-wallets = { features = [], optional = true, path = "../wallets", version = "0.1.0" }
 
 [package.metadata.docs.rs]

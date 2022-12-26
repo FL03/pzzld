@@ -4,7 +4,7 @@
     Description: ... Summary ...
 */
 use clap::Args;
-use pzzld::wallets::mnemonics::Mnemonic;
+use pzzld_sdk::wallets::mnemonics::Mnemonic;
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
 

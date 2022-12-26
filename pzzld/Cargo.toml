@@ -20,7 +20,7 @@ path = "src/main.rs"
 
 
 [dependencies]
-acme = { features = ["full"], git = "https://github.com/FL03/acme", branch = "v0.2.3", version = "0.2.3" }
+acme = { features = ["full"], version = "0.2.3" }
 async-session = "3.0.0"
 axum = { features = ["headers", "http2", "ws"], version = "0.6.1" }
 clap = { features = ["derive"], version = "4.0.29" }
@@ -48,7 +48,7 @@ tracing-subscriber = { features = ["env-filter"], version = "0.3.16" }
 utoipa = { features = ["axum_extras", "serde_json", "serde_yaml"], version = "2.4.2" }
 utoipa-swagger-ui = { features = ["axum"], version = "3.0.1" }
 
-pzzld = { features = ["full"], path = "../crates/sdk", version = "0.1.0" }
+pzzld-sdk = { features = ["full"], path = "../crates/sdk", version = "0.1.0" }
 
 [package.metadata.docs.rs]
 all-features = true

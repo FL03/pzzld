@@ -19,7 +19,7 @@ pub(crate) mod interface {
     use crate::{api::routes, Context};
     use axum::Router;
     use http::header::{HeaderName, AUTHORIZATION};
-    use pzzld::core::servers::{Server, ServerSpec};
+    use acme::servers::{Server, ServerSpec};
     use scsys::AsyncResult;
     use serde::{Deserialize, Serialize};
     use tower_http::{
