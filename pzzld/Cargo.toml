@@ -6,13 +6,9 @@ edition = "2021"
 homepage = "https://github.com/FL03/pzzld/wiki"
 keywords = []
 license = "Apache-2.0"
-name = "pzzld-bin"
+name = "pzzld"
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
-
-[[bin]]
-name = "pzzld"
-path = "src/main.rs"
 
 [build-dependencies]
 
@@ -20,8 +16,9 @@ path = "src/main.rs"
 
 
 [dependencies]
-acme = { features = ["full"], version = "0.2.3" }
+acme = { features = ["full"], git = "https://github.com/FL03/acme", branch = "v0.2.4", version = "0.2.4" }
 async-session = "3.0.0"
+async-trait = "0.1.60"
 axum = { features = ["headers", "http2", "ws"], version = "0.6.1" }
 clap = { features = ["derive"], version = "4.0.29" }
 futures = "0.3.25"
