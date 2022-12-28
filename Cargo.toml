@@ -1,3 +1,11 @@
+[workspace.package]
+authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
+edition = "2021"
+homepage = "https://github.com/FL03/pzzld/wiki"
+license = "Apache-2.0"
+repository = "https://github.com/FL03/pzzld"
+version = "0.1.0" # TODO: Update the package version
+
 [workspace]
 default-members = [
     "pzzld"
