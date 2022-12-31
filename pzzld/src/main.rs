@@ -43,13 +43,13 @@ impl Application {
             state,
         }
     }
-    pub async fn setup(&mut self) -> AsyncResult<&Self> {
+    pub async fn setup(&self) -> AsyncResult<&Self> {
         // Initialize the logger
         self.clone().cnf.logger.setup(None);
         tracing_subscriber::fmt::init();
         Ok(self)
     }
-    pub async fn run(&mut self) -> AsyncResult<&Self> {
+    pub async fn run(&self) -> AsyncResult<&Self> {
         self.setup().await?;
         let cli = cli::new();
         tracing::info!("Success: Commands parsed, processing requests...");
