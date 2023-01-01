@@ -7,10 +7,8 @@
 pub mod oauth;
 pub mod siwe;
 
-pub fn oauth(ctx: crate::Context) -> axum::Router {
-    oauth::router(ctx)
-}
-
-pub fn siwe() -> axum::Router {
-    siwe::router()
+pub fn router(ctx: crate::Context) -> axum::Router {
+    axum::Router::new()
+        .nest("/oauth", oauth::router(ctx))
+        .nest("/siwe", siwe::router())
 }

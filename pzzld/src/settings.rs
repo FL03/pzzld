@@ -15,23 +15,26 @@ pub struct Settings {
     #[serde(skip)]
     pub(crate) client_secret: String,
     pub mode: String,
-    pub name: String,
     pub logger: Logger,
     pub server: Server,
 }
 
 impl Settings {
     pub fn build() -> ConfigResult<Self> {
-        let mut builder = Config::builder()
-            .add_source(Environment::default().separator("__"))
+        let mut builder = Config::builder();
+        // Set defaults
+        builder = builder
             .set_default("mode", "production")?
-            .set_default("name", "Puzzled")?
             .set_default("logger.level", "info")?
             .set_default("server.host", "127.0.0.1")?
             .set_default("server.port", 8080)?;
+        // Load in the .env file
+        builder = builder.add_source(Environment::default().separator("__"));
+        // Load in configuration files following the *.config.* pattern
         if let Ok(v) = try_collect_config_files("**/*.config.*", false) {
             builder = builder.add_source(v);
         }
+        // Check for alternative environment variable representations
         if let Ok(v) = std::env::var("CLIENT_ID") {
             builder = builder.set_override("client_id", v)?;
         }
@@ -44,7 +47,7 @@ impl Settings {
         if let Ok(v) = std::env::var("SERVER_PORT") {
             builder = builder.set_override("server.port", v)?;
         }
-
+        // Attempt to build, then deserialize the configuration
         builder.build()?.try_deserialize()
     }
 }
@@ -65,7 +68,6 @@ impl Default for Settings {
                 client_id: Default::default(),
                 client_secret: Default::default(),
                 mode: "production".to_string(),
-                name: "Puzzled".to_string(),
                 logger: Logger::default(),
                 server: Server::new("127.0.0.1".to_string(), 8080),
             },

@@ -13,9 +13,10 @@ version = "0.1.0"
 
 [features]
 default = [ "core", "wallets" ]
-full = [ "wallets" ]
+full = [ "core", "gateways", "wallets" ]
 
 core = [ ]
+gateways = ["pzzld-gateways"]
 wallets = ["pzzld-wallets"]
 
 [lib]
@@ -27,6 +28,7 @@ test = true
 [dev-dependencies]
 
 [dependencies]
+pzzld-gateways = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
 pzzld-wallets = { features = [], optional = true, path = "../wallets", version = "0.1.0" }
 
 [package.metadata.docs.rs]

@@ -19,7 +19,7 @@ pub enum States {
     Response = 3,
 }
 
-impl StatePack for States {  }
+impl StatePack for States {}
 
 impl std::fmt::Display for States {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

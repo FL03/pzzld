@@ -16,7 +16,7 @@ version = "0.1.0"
 
 
 [dependencies]
-acme = { features = ["full"], git = "https://github.com/FL03/acme", branch = "v0.2.4", version = "0.2.4" }
+acme = { features = ["full"], git = "https://github.com/FL03/acme", branch = "v0.2.5", version = "0.2.5" }
 async-session = "3.0.0"
 async-trait = "0.1.60"
 axum = { features = ["headers", "http2", "macros", "ws"], version = "0.6.1" }
@@ -29,7 +29,7 @@ oauth2 = "4.3.0"
 opentelemetry = { features = ["rt-tokio"], version = "0.18.0" }
 opentelemetry-jaeger = { features = ["full"], version = "0.17.0" }
 reqwest = { features = ["json", "rustls-tls", "stream"], version = "0.11.12" }
-scsys = { features = ["full"], version = "0.1.38" }
+scsys = { features = ["full"], version = "0.1.39" }
 serde = { features = ["derive"], version = "1" }
 serde_json = "1"
 siwe = "0.5.0"

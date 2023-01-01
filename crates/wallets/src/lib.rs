@@ -27,8 +27,6 @@ pub(crate) mod primitives {
     pub const BIP0039_WORDLIST_ENDPOINT: &str =
         "https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039";
 
-    
-
     /// Type alias for a tuple ([secp256k1::SecretKey], [secp256k1::PublicKey])
     pub type SecpKeypair = (SecretKey, PublicKey);
 }

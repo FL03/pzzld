@@ -29,10 +29,10 @@ pub fn router(ctx: crate::Context) -> Router {
 
     Router::new()
         // .route("/auth", get(index))
-        .route("/auth/oauth/token/:id", post(token))
-        .route("/auth/oauth/jetbrains", get(auth_jbspace))
-        .route("/auth/oauth/login", get(login_authorized))
-        .route("/auth/oauth/logout", get(logout))
+        .route("/token/:id", post(token))
+        .route("/jetbrains", get(auth_jbspace))
+        .route("/login", get(login_authorized))
+        .route("/logout", get(logout))
         .layer(Extension(store))
         .layer(Extension(oauth_client))
 }
@@ -218,9 +218,12 @@ struct User {
     name: String,
 }
 
-
-
-pub async fn get_access_token(client_id: &str, client_secret: &str, auth_url: &str, scope: &str) -> String {
+pub async fn get_access_token(
+    client_id: &str,
+    client_secret: &str,
+    auth_url: &str,
+    scope: &str,
+) -> String {
     // Set up the request body
     let mut params = HashMap::new();
     params.insert("grant_type", "client_credentials");
@@ -230,9 +233,11 @@ pub async fn get_access_token(client_id: &str, client_secret: &str, auth_url: &s
 
     // Send the request
     let client = reqwest::Client::new();
-    let resp = client.post(auth_url)
+    let resp = client
+        .post(auth_url)
         .form(&params)
-        .send().await
+        .send()
+        .await
         .expect("Failed to send request");
 
     // Check the response status

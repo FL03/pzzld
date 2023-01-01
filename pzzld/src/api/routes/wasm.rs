@@ -3,15 +3,18 @@
    Contrib: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-use axum::{body::{boxed, Body, BoxBody}, routing::get, Router};
-use http::{Response, Request};
+use axum::{
+    body::{boxed, Body, BoxBody},
+    routing::get,
+    Router,
+};
+use http::{Request, Response};
 use hyper::{StatusCode, Uri};
 use tower::util::ServiceExt;
 use tower_http::services::ServeDir;
 
 pub fn router() -> Router {
-    Router::new()
-        .route("/pkg", get(wasm_handler))
+    Router::new().route("/pkg", get(wasm_handler))
 }
 
 /// Fetch some static assets from a given directory
@@ -26,7 +29,7 @@ async fn static_assets(dir: &str, uri: Uri) -> Result<Response<BoxBody>, (Status
             format!("Something went wrong: {}", err),
         )),
     }
- }
+}
 
 ///
 pub async fn wasm_handler(uri: Uri) -> Result<Response<BoxBody>, (StatusCode, String)> {

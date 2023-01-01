@@ -17,9 +17,10 @@ pub fn from_context(ctx: crate::Context) -> Api {
 
 pub(crate) mod interface {
     use crate::{api::routes, Context};
+    use acme::net::servers::{Server, ServerSpec};
+    use acme::prelude::net::WebBackend;
     use axum::Router;
     use http::header::{HeaderName, AUTHORIZATION};
-    use acme::servers::{Server, ServerSpec};
     use scsys::AsyncResult;
     use serde::{Deserialize, Serialize};
     use tower_http::{
@@ -41,13 +42,44 @@ pub(crate) mod interface {
             Self { ctx, server }
         }
         pub async fn client(&self) -> Router {
+            Router::new()
+                .nest("/api", routes::api(self.ctx.clone()))
+                .merge(routes::wasm::router())
+                .layer(
+                    TraceLayer::new_for_http()
+                        .make_span_with(DefaultMakeSpan::new().include_headers(true))
+                        .on_request(DefaultOnRequest::new().level(tracing::Level::INFO))
+                        .on_response(DefaultOnResponse::new().level(tracing::Level::INFO)),
+                )
+                .layer(SetSensitiveHeadersLayer::new(std::iter::once(
+                    AUTHORIZATION,
+                )))
+                .layer(CompressionLayer::new())
+                .layer(PropagateHeaderLayer::new(HeaderName::from_static(
+                    "x-request-id",
+                )))
+                .layer(axum::Extension(self.ctx.clone()))
+        }
+        /// Returns an owned instance of the server
+        pub fn server(&self) -> &Server {
+            &self.server
+        }
+        /// Quickstart the server with the outlined client
+        pub async fn serve(&self) -> AsyncResult {
+            self.server().serve(self.client().await).await
+        }
+    }
+
+    #[async_trait::async_trait]
+    impl WebBackend for Api {
+        type Ctx = Context;
+
+        type Server = Server;
+
+        async fn client(&self) -> axum::Router {
             let mut router = Router::new();
             // Merge other routers into the base router
-            router = router
-                .merge(routes::index::router())
-                .merge(routes::wasm::router())
-                .merge(routes::auth::oauth(self.ctx.clone()))
-                .merge(routes::auth::siwe());
+            router = router.merge(routes::index::router());
             router = router
                 .layer(
                     TraceLayer::new_for_http()
@@ -65,13 +97,13 @@ pub(crate) mod interface {
                 .layer(axum::Extension(self.ctx.clone()));
             router
         }
-        /// Returns an owned instance of the server
-        pub fn server(&self) -> &Server {
-            &self.server
+
+        fn context(&self) -> Self::Ctx {
+            self.ctx.clone()
         }
-        /// Quickstart the server with the outlined client
-        pub async fn serve(&self) -> AsyncResult {
-            self.server().serve(self.client().await).await
+
+        fn server(&self) -> Self::Server {
+            self.server.clone()
         }
     }
 

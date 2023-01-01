@@ -15,8 +15,8 @@ pub fn new() -> CommandLineInterface {
 
 pub(crate) mod interface {
     use super::Commands;
-    use scsys::AsyncResult;
     use clap::Parser;
+    use scsys::AsyncResult;
     use serde::{Deserialize, Serialize};
 
     pub trait Commander: Clone + clap::Subcommand {
@@ -27,12 +27,17 @@ pub(crate) mod interface {
     pub trait AsyncCommander: Clone + Send + Sync + clap::Subcommand {
         async fn handler(&self) -> AsyncResult<&Self>;
     }
-    
+
     pub trait CLISpec: Parser {
         type Cmds: Commander;
 
-        fn command(&self) -> Option<Self::Cmds> where Self: Sized;
-        fn handler(&self) -> AsyncResult<&Self> where Self: Sized {
+        fn command(&self) -> Option<Self::Cmds>
+        where
+            Self: Sized;
+        fn handler(&self) -> AsyncResult<&Self>
+        where
+            Self: Sized,
+        {
             if let Some(cmd) = self.command().clone() {
                 cmd.handler()?;
             }
@@ -44,8 +49,13 @@ pub(crate) mod interface {
     pub trait AsyncCLISpec: Parser {
         type Cmds: AsyncCommander;
 
-        fn command(&self) -> Option<Self::Cmds> where Self: Sized;
-        async fn handler(&self) -> AsyncResult<&Self> where Self: Sized {
+        fn command(&self) -> Option<Self::Cmds>
+        where
+            Self: Sized;
+        async fn handler(&self) -> AsyncResult<&Self>
+        where
+            Self: Sized,
+        {
             if let Some(cmd) = self.command().clone() {
                 cmd.handler().await?;
             }
