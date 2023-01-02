@@ -12,7 +12,7 @@ pub mod prelude {
     #[cfg(feature = "gateways")]
     pub use super::gateways::*;
     #[cfg(feature = "gateways")]
-    pub use super::gateways::{api::*, config::*, middleware::*};
+    pub use super::gateways::{api::*, config::*, middleware::*, states::*};
     #[cfg(feature = "wallets")]
     pub use super::wallets::*;
     pub use super::*;

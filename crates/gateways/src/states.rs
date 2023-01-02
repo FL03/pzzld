@@ -3,16 +3,9 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use scsys::prelude::{Id, Message, Timestamp};
+use scsys::prelude::{Message, StatePack};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct Session {
-    pub id: Id,
-    pub timestamp: Timestamp,
-    pub data: Vec<String>,
-}
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum State {
@@ -30,6 +23,10 @@ impl State {
     pub fn shared(&self) -> Arc<Self> {
         Arc::new(self.clone())
     }
+}
+
+impl StatePack for State {
+    
 }
 
 impl Default for State {
