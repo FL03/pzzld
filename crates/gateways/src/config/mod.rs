@@ -13,7 +13,7 @@ pub(crate) mod settings {
     use s3::{creds::Credentials, Region};
     use scsys::prelude::{
         config::{Config, Environment},
-        try_collect_config_files, AsyncResult, ConfigResult,
+        try_collect_config_files, AsyncResult, ConfigResult, Configurable,
     };
     use serde::{Deserialize, Serialize};
 
@@ -78,6 +78,14 @@ pub(crate) mod settings {
                 endpoint: self.endpoint.clone(),
                 region: self.region.clone(),
             }
+        }
+    }
+
+    impl Configurable for GatewayConfig {
+        type Settings = Self;
+
+        fn settings(&self) -> &Self::Settings {
+            self
         }
     }
 

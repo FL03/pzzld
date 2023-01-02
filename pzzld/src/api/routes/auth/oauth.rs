@@ -245,8 +245,8 @@ pub async fn get_access_token(
         // Parse the response body
         let value: Value = resp.json().await.expect("Failed to parse response");
         let access_token = value["access_token"].as_str().unwrap();
-        return access_token.to_string();
+        access_token.to_string()
     } else {
-        return "Error".to_string();
+        "Error".to_string()
     }
 }

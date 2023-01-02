@@ -3,20 +3,22 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use scsys::prelude::{fnl_remove, StatePack};
+use scsys::prelude::{fnl_remove, Message, StatePack};
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use strum::{EnumString, EnumVariantNames};
 
+pub type State = scsys::prelude::State<States>;
+
 #[derive(
-    Clone, Debug, Default, Deserialize, EnumString, EnumVariantNames, Eq, PartialEq, Serialize,
+    Clone, Copy, Debug, Default, Deserialize, EnumString, EnumVariantNames, Eq, PartialEq, Serialize,
 )]
 #[strum(serialize_all = "snake_case")]
 pub enum States {
     Error = 0,
     #[default]
     Idle = 1,
-    Request = 2,
-    Response = 3,
+    ReqRes = 2,
 }
 
 impl StatePack for States {}
@@ -24,6 +26,41 @@ impl StatePack for States {}
 impl std::fmt::Display for States {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", fnl_remove(serde_json::to_string(&self).unwrap()))
+    }
+}
+
+impl From<States> for i64 {
+    fn from(data: States) -> Self {
+        data as i64
+    }
+}
+
+impl From<i64> for States {
+    fn from(data: i64) -> Self {
+        match data {
+            0 => Self::Error,
+            1 => Self::Idle,
+            2 => Self::ReqRes,
+            _ => Self::Error,
+        }
+    }
+}
+
+impl TryInto<Value> for States {
+    type Error = Box<dyn std::error::Error + Send + Sync>;
+
+    fn try_into(self) -> Result<Value, <States as TryInto<Value>>::Error> {
+        let res = serde_json::to_value(State::new(None, None, Some(self)))?;
+        Ok(res)
+    }
+}
+
+impl TryInto<Message> for States {
+    type Error = Box<dyn std::error::Error + Send + Sync>;
+
+    fn try_into(self) -> Result<Message, <States as TryInto<Message>>::Error> {
+        let res: Value = self.try_into()?;
+        Ok(Message::from(res))
     }
 }
 

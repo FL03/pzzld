@@ -5,10 +5,11 @@
 */
 use crate::config::{GatewayConfig, GatewayCreds, S3Region};
 use s3::{creds::Credentials, error::S3Error, Bucket, Region};
+use scsys::prelude::Contextual;
 use serde::{Deserialize, Serialize};
 use std::convert::From;
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Gateway {
     pub cnf: GatewayConfig,
 }
@@ -21,7 +22,7 @@ impl Gateway {
             region.endpoint(),
             region.region(),
         );
-        Self { cnf }
+        Self::from(cnf)
     }
     pub fn credentials(&self) -> Credentials {
         let cred = GatewayCreds::new(self.cnf.access_key.clone(), self.cnf.secret_key.clone());
@@ -35,6 +36,16 @@ impl Gateway {
     }
     pub fn bucket(&self, name: &str) -> Result<Bucket, S3Error> {
         Bucket::new(name, self.region(), self.credentials())
+    }
+}
+
+impl Contextual for Gateway {
+    type Cnf = GatewayConfig;
+
+    type Ctx = Self;
+
+    fn context(&self) -> &Self::Ctx {
+        self
     }
 }
 
@@ -65,5 +76,17 @@ impl From<&Gateway> for Region {
 impl Default for Gateway {
     fn default() -> Self {
         Self::from(GatewayConfig::build().ok().unwrap())
+    }
+}
+
+impl std::fmt::Debug for Gateway {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string_pretty(self).unwrap())
+    }
+}
+
+impl std::fmt::Display for Gateway {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(self).unwrap())
     }
 }

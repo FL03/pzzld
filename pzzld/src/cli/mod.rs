@@ -38,7 +38,7 @@ pub(crate) mod interface {
         where
             Self: Sized,
         {
-            if let Some(cmd) = self.command().clone() {
+            if let Some(cmd) = self.command() {
                 cmd.handler()?;
             }
             Ok(self)

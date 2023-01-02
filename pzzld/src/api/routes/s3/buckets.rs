@@ -9,7 +9,7 @@ use axum::{
     routing::get,
     Extension, Json, Router,
 };
-use pzzld_sdk::gateways::{collect_obj_names, fetch_bucket_contents};
+use pzzld_sdk::prelude::{collect_obj_names, fetch_bucket_contents};
 use scsys::prelude::Message;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -23,7 +23,9 @@ pub fn router() -> Router {
 // Base path for the S3 Gateway
 pub async fn landing(Extension(ctx): Extension<Context>) -> Json<Message> {
     let mut auth = false;
-    if ctx.gateway.credentials().access_key.is_some() && ctx.gateway.credentials().secret_key.is_some() {
+    if ctx.gateway.credentials().access_key.is_some()
+        && ctx.gateway.credentials().secret_key.is_some()
+    {
         auth = true
     }
     let msg = Message::from(json!({

@@ -14,7 +14,7 @@ pub(crate) mod states;
 
 use acme::net::servers::Server;
 use acme::prelude::{AppSpec, AsyncSpawable};
-use pzzld_sdk::prelude::{GatewayConfig, Gateway};
+use pzzld_sdk::prelude::{Gateway, GatewayConfig};
 use scsys::prelude::{AsyncResult, Locked, State};
 use std::sync::{Arc, Mutex};
 
@@ -27,7 +27,6 @@ async fn main() -> AsyncResult {
 
 #[derive(Clone, Debug, Default)]
 pub struct Application {
-    pub cnf: Settings,
     pub ctx: Context,
     pub server: Arc<Server>,
     pub state: Locked<State<States>>,
@@ -37,15 +36,10 @@ impl Application {
     pub fn new(cnf: Settings) -> Self {
         let gateway = GatewayConfig::build().ok().unwrap();
 
-        let ctx = Context::new(cnf.clone(), Gateway::from(gateway));
+        let ctx = Context::new(cnf, Gateway::from(gateway));
         let server = Arc::new(Server::default());
         let state = Arc::new(Mutex::new(Default::default()));
-        Self {
-            cnf,
-            ctx,
-            server,
-            state,
-        }
+        Self { ctx, server, state }
     }
     pub fn update_state(&mut self, state: States) -> &Self {
         self.state = Arc::new(Mutex::new(State::new(None, None, Some(state))));
@@ -63,6 +57,7 @@ impl AsyncSpawable for Application {
         Ok(self)
     }
 }
+
 impl AppSpec for Application {
     type Cnf = Settings;
 
@@ -83,12 +78,12 @@ impl AppSpec for Application {
     }
 
     fn settings(&self) -> Self::Cnf {
-        self.context().cnf.clone()
+        self.context().cnf
     }
 
     fn setup(&mut self) -> AsyncResult<&Self> {
         // Initialize the logger
-        self.clone().cnf.logger.setup(None);
+        self.settings().logger.setup(None);
         tracing_subscriber::fmt::init();
         Ok(self)
     }
@@ -103,10 +98,9 @@ impl std::fmt::Display for Application {
         write!(
             f,
             "{}",
-            format!(
-                "view the application locally at http://localhost:{}",
-                self.cnf.server.port
-            )
+            serde_json::json!({
+                "name": self.name()
+            })
         )
     }
 }

@@ -3,40 +3,75 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use scsys::prelude::{Message, StatePack};
+use scsys::prelude::{fnl_remove, Message, StatePack};
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::sync::Arc;
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub enum State {
-    Connect { name: String, endpoint: String },
-    Idle,
+pub type State = scsys::prelude::State<States>;
+
+#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+pub enum States {
+    Error = 0,
+    #[default]
+    Idle = 1,
+    Connect = 2,
 }
 
-impl State {
+impl States {
     pub fn into_message(&self) -> Message<Self> {
-        self.clone().into()
+        (*self).into()
     }
     pub fn boxed(&self) -> Box<&Self> {
         Box::new(self)
     }
     pub fn shared(&self) -> Arc<Self> {
-        Arc::new(self.clone())
+        Arc::new(*self)
     }
 }
 
-impl StatePack for State {
-    
-}
-
-impl Default for State {
-    fn default() -> Self {
-        Self::Idle
+impl From<States> for i64 {
+    fn from(data: States) -> Self {
+        data as i64
     }
 }
 
-impl std::fmt::Display for State {
+impl From<i64> for States {
+    fn from(data: i64) -> Self {
+        match data {
+            0 => Self::Error,
+            1 => Self::Idle,
+            2 => Self::Connect,
+            _ => Self::Error,
+        }
+    }
+}
+
+impl TryInto<Value> for States {
+    type Error = Box<dyn std::error::Error + Send + Sync>;
+
+    fn try_into(self) -> Result<Value, <States as TryInto<Value>>::Error> {
+        let res = serde_json::to_value(State::new(None, None, Some(self)))?;
+        Ok(res)
+    }
+}
+
+impl TryInto<Message> for States {
+    type Error = Box<dyn std::error::Error + Send + Sync>;
+
+    fn try_into(self) -> Result<Message, <States as TryInto<Message>>::Error> {
+        let res: Value = self.try_into()?;
+        Ok(Message::from(res))
+    }
+}
+
+impl StatePack for States {}
+
+impl std::fmt::Display for States {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap())
+        write!(f, "{}", fnl_remove(serde_json::to_string(&self).unwrap()))
     }
 }
+
+#[cfg(test)]
+pub mod tests {}

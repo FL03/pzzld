@@ -7,17 +7,16 @@ homepage = "https://github.com/FL03/pzzld/wiki"
 keywords = []
 license = "Apache-2.0"
 name = "pzzld-sdk"
-readme = "README.md"
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 
 [features]
-default = [ "core", "wallets" ]
-full = [ "core", "gateways", "wallets" ]
+default = [ "core", "gateway", "wallets" ]
+full = [ "core", "gateway", "wallets" ]
 
-core = [ ]
-gateways = ["pzzld-gateways"]
-wallets = ["pzzld-wallets"]
+core = ["pzzld-core/default"]
+gateway = ["pzzld-gateway/default"]
+wallets = ["pzzld-wallets/default"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -28,7 +27,8 @@ test = true
 [dev-dependencies]
 
 [dependencies]
-pzzld-gateways = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
+pzzld-core = { features = [], optional = true, path = "../core", version = "0.1.0" }
+pzzld-gateway = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
 pzzld-wallets = { features = [], optional = true, path = "../wallets", version = "0.1.0" }
 
 [package.metadata.docs.rs]

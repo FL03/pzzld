@@ -6,7 +6,6 @@
 #[doc(inline)]
 pub use self::{gateway::*, primitives::*, utils::*};
 
-pub mod api;
 pub mod config;
 pub mod middleware;
 pub mod states;
