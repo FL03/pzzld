@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use crate::{collect_obj_names, contexts::Context, fetch_bucket_contents};
+use crate::{collect_obj_names, Gateway, fetch_bucket_contents};
 use axum::{
     extract::{Path, Query},
     routing::get,
@@ -20,7 +20,7 @@ pub fn router() -> Router {
 }
 
 // Base path for the S3 Gateway
-pub async fn landing(Extension(ctx): Extension<Context>) -> Json<Message> {
+pub async fn landing(Extension(ctx): Extension<Gateway>) -> Json<Message> {
     let mut auth = false;
     if ctx.credentials().access_key.is_some() && ctx.credentials().secret_key.is_some() {
         auth = true
@@ -35,20 +35,19 @@ pub async fn landing(Extension(ctx): Extension<Context>) -> Json<Message> {
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct BucketParams {
     pub delim: Option<String>,
-    pub name: String,
     pub path: Vec<String>,
     pub prefix: Option<String>,
 }
 
 // Given
 pub async fn fetch_bucket_object_names(
-    Extension(ctx): Extension<Context>,
+    Extension(ctx): Extension<Gateway>,
     Path(name): Path<String>,
     Query(params): Query<BucketParams>,
 ) -> Json<Value> {
     let delim = Some(params.delim.unwrap_or_else(|| "/".to_string()));
     let prefix = params.prefix.unwrap_or_else(|| "/".to_string());
-    let bucket = ctx.bucket(params.name.as_str()).expect("");
+    let bucket = ctx.bucket(name.as_str()).expect("");
     let objects = fetch_bucket_contents(bucket, prefix.as_str(), delim)
         .await
         .unwrap_or_default();

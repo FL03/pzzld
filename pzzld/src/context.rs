@@ -4,17 +4,19 @@
    Description: ... Summary ...
 */
 use super::Settings;
+use pzzld_sdk::prelude::Gateway;
 use scsys::prelude::{hasher, Contextual, Hashable, H256};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Context {
     pub cnf: Settings,
+    pub gateway: Gateway
 }
 
 impl Context {
-    pub fn new(cnf: Settings) -> Self {
-        Self { cnf }
+    pub fn new(cnf: Settings, gateway: Gateway) -> Self {
+        Self { cnf, gateway }
     }
 }
 

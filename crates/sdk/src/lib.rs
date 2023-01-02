@@ -11,6 +11,8 @@ pub use pzzld_wallets as wallets;
 pub mod prelude {
     #[cfg(feature = "gateways")]
     pub use super::gateways::*;
+    #[cfg(feature = "gateways")]
+    pub use super::gateways::{api::*, config::*, middleware::*};
     #[cfg(feature = "wallets")]
     pub use super::wallets::*;
     pub use super::*;

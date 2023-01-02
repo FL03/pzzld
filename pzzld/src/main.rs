@@ -14,6 +14,7 @@ pub(crate) mod states;
 
 use acme::net::servers::Server;
 use acme::prelude::{AppSpec, AsyncSpawable};
+use pzzld_sdk::prelude::{GatewayConfig, Gateway};
 use scsys::prelude::{AsyncResult, Locked, State};
 use std::sync::{Arc, Mutex};
 
@@ -34,7 +35,9 @@ pub struct Application {
 
 impl Application {
     pub fn new(cnf: Settings) -> Self {
-        let ctx = Context::new(cnf.clone());
+        let gateway = GatewayConfig::build().ok().unwrap();
+
+        let ctx = Context::new(cnf.clone(), Gateway::from(gateway));
         let server = Arc::new(Server::default());
         let state = Arc::new(Mutex::new(Default::default()));
         Self {

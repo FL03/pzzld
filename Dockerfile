@@ -28,7 +28,9 @@ FROM runner-base as runner
 ENV CLIENT_ID="" \
     CLIENT_SECRET="" \
     RUST_LOG="info" \
-    SERVER_PORT=8080
+    SERVER_PORT=8080 \
+    S3_ACCESS_KEY=""\
+    S3_SECRET_KEY=""
 
 COPY --chown=55 .config config
 VOLUME ["/config"]

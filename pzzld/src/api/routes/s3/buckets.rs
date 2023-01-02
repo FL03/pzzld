@@ -3,12 +3,13 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
+use crate::Context;
 use axum::{
     extract::{Path, Query},
     routing::get,
     Extension, Json, Router,
 };
-use pzzld_sdk::gateways::{collect_obj_names, contexts::Context, fetch_bucket_contents};
+use pzzld_sdk::gateways::{collect_obj_names, fetch_bucket_contents};
 use scsys::prelude::Message;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -22,7 +23,7 @@ pub fn router() -> Router {
 // Base path for the S3 Gateway
 pub async fn landing(Extension(ctx): Extension<Context>) -> Json<Message> {
     let mut auth = false;
-    if ctx.credentials().access_key.is_some() && ctx.credentials().secret_key.is_some() {
+    if ctx.gateway.credentials().access_key.is_some() && ctx.gateway.credentials().secret_key.is_some() {
         auth = true
     }
     let msg = Message::from(json!({
@@ -35,8 +36,6 @@ pub async fn landing(Extension(ctx): Extension<Context>) -> Json<Message> {
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct BucketParams {
     pub delim: Option<String>,
-    pub name: String,
-    pub path: Vec<String>,
     pub prefix: Option<String>,
 }
 
@@ -48,7 +47,7 @@ pub async fn fetch_bucket_object_names(
 ) -> Json<Value> {
     let delim = Some(params.delim.unwrap_or_else(|| "/".to_string()));
     let prefix = params.prefix.unwrap_or_else(|| "/".to_string());
-    let bucket = ctx.bucket(params.name.as_str()).expect("");
+    let bucket = ctx.gateway.bucket(name.as_str()).expect("");
     let objects = fetch_bucket_contents(bucket, prefix.as_str(), delim)
         .await
         .unwrap_or_default();

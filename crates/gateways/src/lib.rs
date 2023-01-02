@@ -8,7 +8,6 @@ pub use self::{gateway::*, primitives::*, utils::*};
 
 pub mod api;
 pub mod config;
-pub mod contexts;
 pub mod middleware;
 pub mod sessions;
 pub mod states;

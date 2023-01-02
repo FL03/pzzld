@@ -8,7 +8,7 @@ use s3::{creds::Credentials, error::S3Error, Bucket, Region};
 use serde::{Deserialize, Serialize};
 use std::convert::From;
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Gateway {
     pub cnf: GatewayConfig,
 }
@@ -38,6 +38,12 @@ impl Gateway {
     }
 }
 
+impl From<GatewayConfig> for Gateway {
+    fn from(cnf: GatewayConfig) -> Self {
+        Self { cnf }
+    }
+}
+
 impl From<&S3Region> for Gateway {
     fn from(value: &S3Region) -> Self {
         Self::new(Default::default(), value.clone())
@@ -53,5 +59,11 @@ impl From<&Gateway> for Credentials {
 impl From<&Gateway> for Region {
     fn from(value: &Gateway) -> Self {
         value.region()
+    }
+}
+
+impl Default for Gateway {
+    fn default() -> Self {
+        Self::from(GatewayConfig::build().ok().unwrap())
     }
 }
