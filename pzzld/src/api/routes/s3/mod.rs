@@ -6,6 +6,6 @@
 
 pub mod buckets;
 
-pub fn buckets() -> axum::Router {
+pub fn router() -> axum::Router {
     axum::Router::new().nest("/buckets", buckets::router())
 }
