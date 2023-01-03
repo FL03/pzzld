@@ -13,7 +13,7 @@ pub(crate) mod settings;
 pub(crate) mod states;
 
 use acme::net::servers::Server;
-use acme::prelude::{AppSpec, AsyncSpawable};
+use acme::prelude::{AppSpec, AsyncSpawnable};
 use pzzld_sdk::prelude::{Gateway, GatewayConfig};
 use scsys::prelude::{AsyncResult, Locked, State};
 use std::sync::{Arc, Mutex};
@@ -48,7 +48,7 @@ impl Application {
 }
 
 #[async_trait::async_trait]
-impl AsyncSpawable for Application {
+impl AsyncSpawnable for Application {
     async fn spawn(&mut self) -> AsyncResult<&Self> {
         self.setup()?;
         let cli = cli::new();
