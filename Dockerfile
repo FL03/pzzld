@@ -37,7 +37,7 @@ FROM runner
 
 EXPOSE 80
 EXPOSE ${SERVER_PORT}
-
+EXPOSE 6379
 
 ENTRYPOINT [ "pzzld" ]
 CMD [ "system", "--up" ]
