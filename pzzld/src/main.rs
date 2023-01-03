@@ -58,9 +58,7 @@ impl AsyncSpawnable for Application {
     }
 }
 
-impl AppSpec for Application {
-    type Cnf = Settings;
-
+impl AppSpec<Settings> for Application {
     type Ctx = Context;
 
     type State = State<States>;
@@ -77,7 +75,7 @@ impl AppSpec for Application {
         env!("CARGO_PKG_NAME").to_string()
     }
 
-    fn settings(&self) -> Self::Cnf {
+    fn settings(&self) -> Settings {
         self.context().cnf
     }
 
