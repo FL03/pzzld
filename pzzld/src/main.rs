@@ -4,6 +4,7 @@
     Description:
 
         To-do:
+            - Fix the dockerfile & its failure to post the served application's port
             Application:
                 Channels:
                     - Fix the application channel response matrix

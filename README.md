@@ -35,7 +35,13 @@ docker pull jo3mccain/pzzld:latest
 #### _Run the image_
 
 ```bash
-docker run -p 8080:8080 jo3mccain/pzzld:latest system --up
+docker run \
+    -p 8080:8080 \
+    -e CLIENT_ID="${CLIENT_ID}" \
+    -e CLIENT_SECRET="${CLIENT_SECRET}" \
+    -e S3_ACCESS_KEY="${S3_ACCESS_KEY}" \
+    -e S3_SECRET_KEY="${S3_SECRET_KEY}"  \
+    jo3mccain/pzzld:latest
 ```
 
 ### Usage
