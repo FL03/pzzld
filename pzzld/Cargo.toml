@@ -21,7 +21,7 @@ test = false
 [dependencies]
 acme = { features = ["net"], git = "https://github.com/FL03/acme", branch = "v0.2.5", version = "0.2.5" }
 pzzld-sdk = { features = ["full"], path = "../crates/sdk", version = "0.1.0" }
-scsys = { features = ["full"], version = "0.1.39" }
+scsys = { features = ["full"], version = "0.1.40" }
 
 async-session = "3.0.0"
 async-trait = "0.1.60"

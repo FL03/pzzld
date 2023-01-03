@@ -3,7 +3,7 @@
    Contrib: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::{context::*, settings::*, states::States};
+pub use self::{context::*, settings::*, states::*};
 
 pub mod api;
 pub mod cli;
@@ -15,13 +15,14 @@ pub(crate) mod states;
 use acme::net::servers::Server;
 use acme::prelude::{AppSpec, AsyncSpawnable};
 use pzzld_sdk::prelude::{Gateway, GatewayConfig};
-use scsys::prelude::{AsyncResult, Locked, State};
+use scsys::prelude::{AsyncResult, Contextual, Locked};
 use std::sync::{Arc, Mutex};
 
 #[tokio::main]
 async fn main() -> AsyncResult {
+    // Initialize, then spawn the application
     Application::default().spawn().await?;
-
+    
     Ok(())
 }
 
@@ -29,7 +30,7 @@ async fn main() -> AsyncResult {
 pub struct Application {
     pub ctx: Context,
     pub server: Arc<Server>,
-    pub state: Locked<State<States>>,
+    pub state: Locked<State>,
 }
 
 impl Application {
@@ -41,6 +42,7 @@ impl Application {
         let state = Arc::new(Mutex::new(Default::default()));
         Self { ctx, server, state }
     }
+    // Update the application state
     pub fn update_state(&mut self, state: States) -> &Self {
         self.state = Arc::new(Mutex::new(State::new(None, None, Some(state))));
         self
@@ -61,7 +63,7 @@ impl AsyncSpawnable for Application {
 impl AppSpec<Settings> for Application {
     type Ctx = Context;
 
-    type State = State<States>;
+    type State = State;
 
     fn init() -> Self {
         Self::new(Default::default())
@@ -76,7 +78,7 @@ impl AppSpec<Settings> for Application {
     }
 
     fn settings(&self) -> Settings {
-        self.context().cnf
+        self.ctx.cnf.clone()
     }
 
     fn setup(&mut self) -> AsyncResult<&Self> {
@@ -88,6 +90,20 @@ impl AppSpec<Settings> for Application {
 
     fn state(&self) -> &scsys::Locked<Self::State> {
         &self.state
+    }
+
+    fn slug(&self) -> String {
+        self.name().to_ascii_lowercase()
+    }
+}
+
+impl Contextual for Application {
+    type Cnf = Settings;
+
+    type Ctx = Context;
+
+    fn context(&self) -> &Self::Ctx {
+        &self.ctx
     }
 }
 

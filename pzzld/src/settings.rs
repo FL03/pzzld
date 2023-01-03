@@ -4,11 +4,11 @@
    Description: ... Summary ...
 */
 use scsys::prelude::config::{Config, Environment};
-use scsys::Hashable;
-use scsys::{prelude::*, try_collect_config_files, ConfigResult};
+use scsys::Hash;
+use scsys::{prelude::{Configurable, Logger, Hashable, Server}, try_collect_config_files, ConfigResult};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, Hashable, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Settings {
     #[serde(skip)]
     pub(crate) client_id: String,
