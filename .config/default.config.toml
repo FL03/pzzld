@@ -1,18 +1,14 @@
 client_id = ""
 client_secret = ""
 mode = "development"
-name = "Puzzled"
 
 [logger]
 level = "info"
 
+[gateway]
+endpoint = "https://gateway.storjshare.io"
+region = "us-east-1"
+
 [server]
 host = "127.0.0.1"
 port = 8080
-
-[services]
-
-[services.oauth]
-auth = ""
-redirect = ""
-token= ""

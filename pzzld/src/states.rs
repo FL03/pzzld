@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use scsys::prelude::{fnl_remove, Message, StatePack};
+use scsys::prelude::{fnl_remove, Hash, Hashable, Message, StatePack};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use strum::{EnumString, EnumVariantNames};
@@ -11,7 +11,7 @@ use strum::{EnumString, EnumVariantNames};
 pub type State = scsys::prelude::State<States>;
 
 #[derive(
-    Clone, Copy, Debug, Default, Deserialize, EnumString, EnumVariantNames, Eq, PartialEq, Serialize,
+    Clone, Copy, Debug, Default, Deserialize, EnumString, EnumVariantNames, Eq, Hash, PartialEq, Serialize,
 )]
 #[strum(serialize_all = "snake_case")]
 pub enum States {

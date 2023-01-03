@@ -41,11 +41,11 @@ pub(crate) mod settings {
         }
         pub fn build() -> ConfigResult<Self> {
             let mut builder = Config::builder()
-                .add_source(Environment::default().prefix("S3").separator("_"))
                 .set_default("access_key", "")?
                 .set_default("secret_key", "")?
                 .set_default("endpoint", "https://gateway.storjshare.io")?
-                .set_default("region", "us-east-1")?;
+                .set_default("region", "us-east-1")?
+                .add_source(Environment::default().prefix("S3").separator("_"));
 
             if let Ok(v) = try_collect_config_files("**/*.config.*", false) {
                 builder = builder.add_source(v);

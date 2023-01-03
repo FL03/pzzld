@@ -5,7 +5,7 @@
 */
 use super::Settings;
 use pzzld_sdk::prelude::Gateway;
-use scsys::prelude::{hasher, Configurable, Contextual, Hashable, H256};
+use scsys::prelude::{Configurable, Contextual, Hash, Hashable};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -34,12 +34,6 @@ impl Contextual for Context {
 
     fn context(&self) -> &Self::Ctx {
         self
-    }
-}
-
-impl Hashable for Context {
-    fn hash(&self) -> H256 {
-        hasher(self).into()
     }
 }
 

@@ -21,7 +21,7 @@ pub(crate) mod interface {
     use acme::prelude::net::WebBackend;
     use axum::Router;
     use http::header::{HeaderName, AUTHORIZATION};
-    use scsys::AsyncResult;
+    use scsys::prelude::{AsyncResult, Hash, Hashable};
     use serde::{Deserialize, Serialize};
     use tower_http::{
         compression::CompressionLayer,
