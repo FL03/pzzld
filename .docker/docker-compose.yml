@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: pzzld
     depends_on: [ cache ]
+    env_file:
+      - ../.env
     ports:
       - "8080:8080"
     restart: always

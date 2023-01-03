@@ -32,14 +32,16 @@ ENV CLIENT_ID="" \
     S3_ACCESS_KEY=""\
     S3_SECRET_KEY=""
 
-COPY --chown=55 .config config
+COPY --chown=55 .config /config
 VOLUME ["/config"]
 
 COPY --from=builder /app/target/release/pzzld /bin/pzzld
 
 FROM runner
 
+EXPOSE 80
 EXPOSE ${SERVER_PORT}
+
 
 ENTRYPOINT [ "pzzld" ]
 CMD [ "system", "--up" ]
