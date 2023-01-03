@@ -38,7 +38,7 @@ pub fn router(ctx: crate::Context) -> Router {
 }
 
 // Session is optional
-async fn index(user: Option<User>) -> impl IntoResponse {
+pub async fn index(user: Option<User>) -> impl IntoResponse {
     let msg = match user {
         Some(u) => format!(
             "Hey {}! You're logged in!\nYou may now access `/protected`.\nLog out with `/logout`.",
@@ -62,8 +62,8 @@ pub async fn token(Path(id): Path<usize>) -> Json<Value> {
 }
 
 fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
-    let client_id = ctx.cnf.client_id.clone();
-    let client_secret = ctx.cnf.client_secret;
+    let client_id = ctx.cnf.auth.id.clone();
+    let client_secret = ctx.cnf.auth.secret;
     let redirect_url =
         std::env::var("REDIRECT_URL").unwrap_or_else(|_| "http://localhost:9000/auth/".to_string());
 
@@ -94,7 +94,7 @@ async fn auth_jbspace(Extension(client): Extension<BasicClient>) -> impl IntoRes
 }
 
 // Valid user session required. If there is none, redirect to the auth page
-async fn protected(user: User) -> impl IntoResponse {
+pub async fn protected(user: User) -> impl IntoResponse {
     format!(
         "Welcome to the protected area :)\nHere's your info:\n{:?}",
         user
@@ -119,7 +119,7 @@ async fn logout(
 
 #[derive(Debug, Deserialize)]
 #[allow(dead_code)]
-struct AuthRequest {
+pub struct AuthRequest {
     code: String,
     state: String,
 }
@@ -165,7 +165,7 @@ async fn login_authorized(
     (headers, Redirect::to("/"))
 }
 
-struct AuthRedirect;
+pub struct AuthRedirect;
 
 impl IntoResponse for AuthRedirect {
     fn into_response(self) -> Response {
@@ -211,7 +211,7 @@ impl OAuth2Client {
 
 // The user data we'll get back from Google.
 #[derive(Debug, Serialize, Deserialize)]
-struct User {
+pub struct User {
     sub: String,
     picture: Option<String>,
     email: String,

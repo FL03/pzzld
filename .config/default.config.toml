@@ -1,6 +1,10 @@
-client_id = ""
-client_secret = ""
 mode = "development"
+
+[auth]
+id = ""
+secret = ""
+redirect = ""
+token = ""
 
 [logger]
 level = "info"
