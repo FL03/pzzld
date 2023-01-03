@@ -23,8 +23,8 @@ use strum::{EnumString, EnumVariantNames};
 )]
 pub enum Language {
     #[default]
-    English,
-    French,
+    English = 0,
+    French = 1,
 }
 
 impl From<&Self> for Language {

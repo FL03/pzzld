@@ -1,12 +1,19 @@
 /*
-   Appellation: Pzzld <binary>
-   Contrib: FL03 <jo3mccain@icloud.com>
-   Description: ... Summary ...
+    Appellation: Pzzld <binary>
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description:
+
+        To-do:
+            Application:
+                Channels:
+                    - Fix the application channel response matrix
+                    -
 */
 pub use self::{context::*, settings::*, states::*};
 
 pub mod api;
 pub mod cli;
+pub mod proxy;
 
 pub(crate) mod context;
 pub(crate) mod settings;
@@ -14,7 +21,7 @@ pub(crate) mod states;
 
 use acme::net::servers::Server;
 use acme::prelude::{AppSpec, AsyncSpawnable};
-use pzzld_sdk::prelude::{Gateway, GatewayConfig};
+use acme::TokioChannelPackMPSC;
 use scsys::prelude::{AsyncResult, Contextual, Locked};
 use std::sync::{Arc, Mutex};
 
@@ -22,7 +29,7 @@ use std::sync::{Arc, Mutex};
 async fn main() -> AsyncResult {
     // Initialize, then spawn the application
     Application::default().spawn().await?;
-    
+
     Ok(())
 }
 
@@ -34,29 +41,41 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn new(cnf: Settings) -> Self {
-        let gateway = GatewayConfig::build().ok().unwrap();
-
-        let ctx = Context::new(cnf, Gateway::from(gateway));
-        let server = Arc::new(Server::default());
-        let state = Arc::new(Mutex::new(Default::default()));
+    pub fn new(ctx: Context, server: Arc<Server>, state: Locked<State>) -> Self {
         Self { ctx, server, state }
     }
+    // Initializes a pack of channels with a buffer of three
+    pub fn state_channels(&self) -> TokioChannelPackMPSC<Locked<State>> {
+        tokio::sync::mpsc::channel(3)
+    }
     // Update the application state
-    pub fn update_state(&mut self, state: States) -> &Self {
-        self.state = Arc::new(Mutex::new(State::new(None, None, Some(state))));
-        self
+    pub async fn update_state(&mut self, state: State) -> AsyncResult<&Self> {
+        self.state = Arc::new(Mutex::new(state));
+        self.state_channels().0.send(self.state.clone()).await?;
+        Ok(self)
     }
 }
 
 #[async_trait::async_trait]
 impl AsyncSpawnable for Application {
     async fn spawn(&mut self) -> AsyncResult<&Self> {
+        self.update_state(States::Setup.into()).await?;
         self.setup()?;
+        self.update_state(States::Idle.into()).await?;
         let cli = cli::new();
         tracing::info!("Success: Commands parsed, processing requests...");
         cli.handler().await?;
         Ok(self)
+    }
+}
+
+impl From<Settings> for Application {
+    fn from(cnf: Settings) -> Self {
+        Self::new(
+            Context::new(cnf, Default::default()),
+            Arc::new(Default::default()),
+            States::default().into(),
+        )
     }
 }
 
@@ -66,7 +85,7 @@ impl AppSpec<Settings> for Application {
     type State = State;
 
     fn init() -> Self {
-        Self::new(Default::default())
+        Self::from(Settings::default())
     }
 
     fn context(&self) -> Self::Ctx {
@@ -85,6 +104,12 @@ impl AppSpec<Settings> for Application {
         // Initialize the logger
         self.settings().logger.setup(None);
         tracing_subscriber::fmt::init();
+
+        self.state
+            .lock()
+            .unwrap()
+            .events
+            .push("Application Initialized".to_string());
         Ok(self)
     }
 

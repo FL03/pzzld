@@ -22,7 +22,7 @@ impl Context {
 
 impl Configurable for Context {
     type Settings = Settings;
-    
+
     fn settings(&self) -> &Self::Settings {
         &self.cnf
     }

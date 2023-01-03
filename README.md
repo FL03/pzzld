@@ -6,7 +6,7 @@
 
 ***
 
-A barebones repository template for quickly setting up a proper workspace
+Welcome to Puzzled, this application services my Ethereum namespace in several ways emulating several critical capabilities currently being pursued by Scattered-Systems, DAO LLC. The application is written primarily in Rust, leveraging Axum and Clap application frameworks to create a high-preformance web-application capable of serving static assets and wasm files. Additionally, the applicaiton implements a host of authentication measures
 
 ## Getting Started
 

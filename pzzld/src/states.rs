@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use scsys::prelude::{fnl_remove, Hash, Hashable, Message, StatePack};
+use scsys::prelude::{fnl_remove, Hash, Hashable, Locked, Message, StatePack};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use strum::{EnumString, EnumVariantNames};
@@ -11,7 +11,17 @@ use strum::{EnumString, EnumVariantNames};
 pub type State = scsys::prelude::State<States>;
 
 #[derive(
-    Clone, Copy, Debug, Default, Deserialize, EnumString, EnumVariantNames, Eq, Hash, PartialEq, Serialize,
+    Clone,
+    Copy,
+    Debug,
+    Default,
+    Deserialize,
+    EnumString,
+    EnumVariantNames,
+    Eq,
+    Hash,
+    PartialEq,
+    Serialize,
 )]
 #[strum(serialize_all = "snake_case")]
 pub enum States {
@@ -19,6 +29,7 @@ pub enum States {
     #[default]
     Idle = 1,
     ReqRes = 2,
+    Setup = 3,
 }
 
 impl StatePack for States {}
@@ -26,6 +37,30 @@ impl StatePack for States {}
 impl std::fmt::Display for States {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", fnl_remove(serde_json::to_string(&self).unwrap()))
+    }
+}
+
+impl Into<Locked<States>> for States {
+    fn into(self) -> Locked<States> {
+        std::sync::Arc::new(std::sync::Mutex::new(self))
+    }
+}
+
+impl Into<Locked<State>> for States {
+    fn into(self) -> Locked<State> {
+        std::sync::Arc::new(std::sync::Mutex::new(State::new(None, None, Some(self))))
+    }
+}
+
+impl From<States> for State {
+    fn from(s: States) -> Self {
+        State::new(None, None, Some(s))
+    }
+}
+
+impl From<State> for States {
+    fn from(s: State) -> Self {
+        s.state
     }
 }
 
@@ -41,6 +76,7 @@ impl From<i64> for States {
             0 => Self::Error,
             1 => Self::Idle,
             2 => Self::ReqRes,
+            3 => Self::Setup,
             _ => Self::Error,
         }
     }

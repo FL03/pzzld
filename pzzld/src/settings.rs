@@ -5,7 +5,10 @@
 */
 use scsys::prelude::config::{Config, Environment};
 use scsys::Hash;
-use scsys::{prelude::{Configurable, Logger, Hashable, Server}, try_collect_config_files, ConfigResult};
+use scsys::{
+    prelude::{Configurable, Hashable, Logger, Server},
+    try_collect_config_files, ConfigResult,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]

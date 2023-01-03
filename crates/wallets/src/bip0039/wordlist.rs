@@ -3,7 +3,8 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use crate::{extract_file_from_path, try_collect_files, Language, BIP0039_WORDLIST_ENDPOINT};
+use super::{Language, BIP0039_ENDPOINT};
+use crate::{extract_file_from_path, try_collect_files};
 use scsys::AsyncResult;
 use serde::{Deserialize, Serialize};
 use std::convert::From;
@@ -19,18 +20,14 @@ impl BIP0039 {
         &self.0
     }
     pub async fn fetch(lang: Option<Language>) -> AsyncResult<Self> {
-        let endpoint = format!(
-            "{}/{}.txt",
-            BIP0039_WORDLIST_ENDPOINT,
-            lang.unwrap_or_default()
-        );
+        let endpoint = format!("{}/{}.txt", BIP0039_ENDPOINT, lang.unwrap_or_default());
         let response = reqwest::get(endpoint.as_str()).await?.text().await?;
         Ok(Self::from(response.split('\n').collect::<Vec<_>>()))
     }
     pub fn from_file() -> Option<Self> {
         if let Ok(paths) = try_collect_files("**/BIP0039/english.txt") {
             if !paths.is_empty() {
-                Self::from(extract_file_from_path(&paths[0]));
+                Some(Self::from(extract_file_from_path(&paths[0])));
             }
         }
         None

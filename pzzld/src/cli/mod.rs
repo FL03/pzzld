@@ -19,50 +19,6 @@ pub(crate) mod interface {
     use scsys::AsyncResult;
     use serde::{Deserialize, Serialize};
 
-    pub trait Commander: Clone + clap::Subcommand {
-        fn handler(&self) -> AsyncResult<&Self>;
-    }
-
-    #[async_trait::async_trait]
-    pub trait AsyncCommander: Clone + Send + Sync + clap::Subcommand {
-        async fn handler(&self) -> AsyncResult<&Self>;
-    }
-
-    pub trait CLISpec: Parser {
-        type Cmds: Commander;
-
-        fn command(&self) -> Option<Self::Cmds>
-        where
-            Self: Sized;
-        fn handler(&self) -> AsyncResult<&Self>
-        where
-            Self: Sized,
-        {
-            if let Some(cmd) = self.command() {
-                cmd.handler()?;
-            }
-            Ok(self)
-        }
-    }
-
-    #[async_trait::async_trait]
-    pub trait AsyncCLISpec: Parser {
-        type Cmds: AsyncCommander;
-
-        fn command(&self) -> Option<Self::Cmds>
-        where
-            Self: Sized;
-        async fn handler(&self) -> AsyncResult<&Self>
-        where
-            Self: Sized,
-        {
-            if let Some(cmd) = self.command().clone() {
-                cmd.handler().await?;
-            }
-            Ok(self)
-        }
-    }
-
     #[derive(Clone, Debug, Deserialize, Eq, Hash, Parser, PartialEq, Serialize)]
     #[clap(about, author, version)]
     #[clap(long_about = "")]
@@ -78,12 +34,9 @@ pub(crate) mod interface {
     }
 
     impl CommandLineInterface {
-        pub async fn handler(&self) -> scsys::AsyncResult<&Self> {
-            match self.command.clone() {
-                None => {}
-                Some(v) => {
-                    v.handler().await?;
-                }
+        pub async fn handler(&self) -> AsyncResult<&Self> {
+            if let Some(cmd) = self.command.clone() {
+                cmd.handler().await?;
             }
             Ok(self)
         }

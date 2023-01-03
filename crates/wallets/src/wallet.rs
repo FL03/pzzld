@@ -4,7 +4,7 @@
     Description:
         ... Summary ...
 */
-use crate::wallets::keys::WalletKey;
+use crate::WalletKey;
 use scsys::prelude::AsyncResult;
 use secp256k1::{PublicKey, SecretKey};
 use serde::{Deserialize, Serialize};
