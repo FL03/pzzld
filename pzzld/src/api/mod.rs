@@ -12,7 +12,7 @@ pub fn new() -> Api {
 }
 
 pub fn from_context(ctx: crate::Context) -> Api {
-    Api::new(ctx.clone(), ctx.cnf.server.port)
+    Api::new(ctx.clone())
 }
 
 pub(crate) mod interface {
@@ -33,12 +33,12 @@ pub(crate) mod interface {
     #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
     pub struct Api {
         pub ctx: Context,
-        pub server: Server,
+        pub server: Server
     }
 
     impl Api {
-        pub fn new(ctx: Context, port: u16) -> Self {
-            let server = Server::from(port);
+        pub fn new(ctx: Context) -> Self {
+            let server = Server::from(ctx.cnf.server.pieces());
             Self { ctx, server }
         }
         pub async fn client(&self) -> Router {

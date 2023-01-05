@@ -62,10 +62,9 @@ pub async fn token(Path(id): Path<usize>) -> Json<Value> {
 }
 
 fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
-    let client_id = ctx.cnf.auth.id.clone();
+    let client_id = ctx.cnf.auth.id;
     let client_secret = ctx.cnf.auth.secret;
-    let redirect_url =
-        std::env::var("REDIRECT_URL").unwrap_or_else(|_| "http://localhost:9000/auth/".to_string());
+    let redirect_url = "http://localhost:8080/api".to_string();
 
     let auth_url = std::env::var("AUTH_URL")
         .unwrap_or_else(|_| "https://scsys.jetbrains.space/oauth/auth".to_string());

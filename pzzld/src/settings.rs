@@ -35,6 +35,10 @@ impl Settings {
         let mut builder = Config::builder();
         // Set defaults
         builder = builder
+            .set_default("auth.id", "")?
+            .set_default("auth.secret", "")?
+            .set_default("auth.redirect", "http://localhost:8080/api")?
+            .set_default("auth.token", "")?
             .set_default("mode", "production")?
             .set_default("logger.level", "info")?
             .set_default("server.host", "0.0.0.0")?
@@ -77,10 +81,11 @@ impl Default for Settings {
             v
         } else {
             Self {
-                auth: Default::default(),
-                mode: "production".to_string(),
-                logger: Logger::default(),
-                server: Server::new("0.0.0.0".to_string(), 8080),
+                auth: OAuth2Config::default(),
+                logger: Logger::new("info".to_string()),
+                mode: "development".to_string(),
+                server: Server::new("0.0.0.0".to_string(), 8080)
+
             }
         }
     }
