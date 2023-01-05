@@ -53,6 +53,12 @@ impl Settings {
         if let Ok(v) = std::env::var("CLIENT_ID") {
             builder = builder.set_override("auth.id", v)?;
         }
+        if let Ok(v) = std::env::var("REDIRECT_URL") {
+            builder = builder.set_override("auth.redirct", v)?;
+        }
+        if let Ok(v) = std::env::var("TOKEN_URL") {
+            builder = builder.set_override("auth.token", v)?;
+        }
         if let Ok(v) = std::env::var("CLIENT_SECRET") {
             builder = builder.set_override("auth.secret", v)?;
         }

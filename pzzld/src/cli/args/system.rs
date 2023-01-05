@@ -25,7 +25,7 @@ impl System {
         tracing::debug!("System processing...");
         if self.up {
             tracing::info!("Spawning the api...");
-            let api = crate::api::Api::new(ctx);
+            let api = crate::api::from_context(ctx);
             api.serve().await?;
         }
         self.commands()?;

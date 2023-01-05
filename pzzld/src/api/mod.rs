@@ -43,8 +43,8 @@ pub(crate) mod interface {
         }
         pub async fn client(&self) -> Router {
             Router::new()
-                .nest("/api", routes::api(self.ctx.clone()))
-                .merge(routes::wasm::router())
+                .nest("/app", routes::wasm::router())
+                .merge(routes::api(self.ctx.clone()))
                 .layer(
                     TraceLayer::new_for_http()
                         .make_span_with(DefaultMakeSpan::new().include_headers(true))
@@ -70,42 +70,42 @@ pub(crate) mod interface {
         }
     }
 
-    #[async_trait::async_trait]
-    impl WebBackend for Api {
-        type Ctx = Context;
+    // #[async_trait::async_trait]
+    // impl WebBackend for Api {
+    //     type Ctx = Context;
 
-        type Server = Server;
+    //     type Server = Server;
 
-        async fn client(&self) -> axum::Router {
-            let mut router = Router::new();
-            // Merge other routers into the base router
-            router = router.merge(routes::index::router());
-            router = router
-                .layer(
-                    TraceLayer::new_for_http()
-                        .make_span_with(DefaultMakeSpan::new().include_headers(true))
-                        .on_request(DefaultOnRequest::new().level(tracing::Level::INFO))
-                        .on_response(DefaultOnResponse::new().level(tracing::Level::INFO)),
-                )
-                .layer(SetSensitiveHeadersLayer::new(std::iter::once(
-                    AUTHORIZATION,
-                )))
-                .layer(CompressionLayer::new())
-                .layer(PropagateHeaderLayer::new(HeaderName::from_static(
-                    "x-request-id",
-                )))
-                .layer(axum::Extension(self.ctx.clone()));
-            router
-        }
+    //     async fn client(&self) -> axum::Router {
+    //         let mut router = Router::new();
+    //         // Merge other routers into the base router
+    //         router = router.merge(routes::index::router());
+    //         router = router
+    //             .layer(
+    //                 TraceLayer::new_for_http()
+    //                     .make_span_with(DefaultMakeSpan::new().include_headers(true))
+    //                     .on_request(DefaultOnRequest::new().level(tracing::Level::INFO))
+    //                     .on_response(DefaultOnResponse::new().level(tracing::Level::INFO)),
+    //             )
+    //             .layer(SetSensitiveHeadersLayer::new(std::iter::once(
+    //                 AUTHORIZATION,
+    //             )))
+    //             .layer(CompressionLayer::new())
+    //             .layer(PropagateHeaderLayer::new(HeaderName::from_static(
+    //                 "x-request-id",
+    //             )))
+    //             .layer(axum::Extension(self.ctx.clone()));
+    //         router
+    //     }
 
-        fn context(&self) -> Self::Ctx {
-            self.ctx.clone()
-        }
+    //     fn context(&self) -> Self::Ctx {
+    //         self.ctx.clone()
+    //     }
 
-        fn server(&self) -> Self::Server {
-            self.server.clone()
-        }
-    }
+    //     fn server(&self) -> Self::Server {
+    //         self.server.clone()
+    //     }
+    // }
 
     impl std::fmt::Display for Api {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
