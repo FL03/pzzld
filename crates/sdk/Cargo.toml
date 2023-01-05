@@ -14,10 +14,10 @@ version = "0.1.0"
 default = [ "core", "services" ]
 full = [ "core", "services" ]
 
-services = ["gateway", "payments", "wallets"]
+services = ["payments", "wallets"]
 
 core = ["pzzld-core/default"]
-gateway = ["pzzld-gateway/default"]
+# gateway = ["pzzld-gateway/default"]
 payments = ["pzzld-payments/default"]
 wallets = ["pzzld-wallets/default"]
 
@@ -31,7 +31,7 @@ test = true
 
 [dependencies]
 pzzld-core = { features = [], optional = true, path = "../core", version = "0.1.0" }
-pzzld-gateway = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
+# pzzld-gateway = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
 pzzld-payments = { features = [], optional = true, path = "../payments", version = "0.1.0" }
 pzzld-wallets = { features = [], optional = true, path = "../wallets", version = "0.1.0" }
 

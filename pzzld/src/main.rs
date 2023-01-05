@@ -73,7 +73,7 @@ impl AsyncSpawnable for Application {
 impl From<Settings> for Application {
     fn from(cnf: Settings) -> Self {
         Self::new(
-            Context::new(cnf, Default::default()),
+            Context::new(cnf),
             Arc::new(Default::default()),
             States::default().into(),
         )

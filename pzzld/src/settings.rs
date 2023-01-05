@@ -11,7 +11,7 @@ use scsys::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct OAuth2Config {
     #[serde(rename = "client_id")]
     pub id: String,
@@ -25,8 +25,8 @@ pub struct OAuth2Config {
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Settings {
     pub auth: OAuth2Config,
-    pub mode: String,
     pub logger: Logger,
+    pub mode: String,
     pub server: Server,
 }
 
@@ -72,6 +72,18 @@ impl Configurable for Settings {
 
     fn settings(&self) -> &Self::Settings {
         self
+    }
+}
+
+impl Default for OAuth2Config {
+    fn default() -> Self {
+        Self { 
+            id: String::new(),
+            secret: String::new(),
+            redirect: String::from("http://localhost:8080"),
+            scope: None,
+            token: String::new()
+        }
     }
 }
 
