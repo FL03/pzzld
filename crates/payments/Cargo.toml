@@ -23,7 +23,7 @@ test = true
 acme = { features = ["net"], git = "https://github.com/FL03/acme", branch = "v0.2.5", version = "0.2.5" }
 scsys = { features = ["full"], version = "0.1.40" }
 
-async-stripe = { features = [], version = "0.15.0" }
+# async-stripe = { features = [], version = "0.15.0" }
 async-trait = "0.1"
 axum-core = "0.3.0"
 http = "0.2.8"
