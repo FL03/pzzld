@@ -4,23 +4,22 @@
     Description:
 
         To-do:
-            - Fix the dockerfile & its failure to post the served application's port
             Application:
                 Channels:
-                    - Fix the application channel response matrix
+                    - Create a response matrix for the application channels
                     -
 */
 pub use self::{context::*, settings::*, states::*};
 
 pub mod api;
 pub mod cli;
+pub mod data;
 pub mod proxy;
 
 pub(crate) mod context;
 pub(crate) mod settings;
 pub(crate) mod states;
 
-use acme::net::servers::Server;
 use acme::prelude::{AppSpec, AsyncSpawnable};
 use acme::TokioChannelPackMPSC;
 use scsys::prelude::{AsyncResult, Contextual, Locked};
@@ -34,16 +33,15 @@ async fn main() -> AsyncResult {
     Ok(())
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct Application {
     pub ctx: Context,
-    pub server: Arc<Server>,
     pub state: Locked<State>,
 }
 
 impl Application {
-    pub fn new(ctx: Context, server: Arc<Server>, state: Locked<State>) -> Self {
-        Self { ctx, server, state }
+    pub fn new(ctx: Context, state: Locked<State>) -> Self {
+        Self { ctx, state }
     }
     // Initializes a pack of channels with a buffer of three
     pub fn state_channels(&self) -> TokioChannelPackMPSC<Locked<State>> {
@@ -57,6 +55,12 @@ impl Application {
     }
 }
 
+impl Default for Application {
+    fn default() -> Self {
+        Self::new(Default::default(), States::default().into())
+    }
+}
+
 #[async_trait::async_trait]
 impl AsyncSpawnable for Application {
     async fn spawn(&mut self) -> AsyncResult<&Self> {
@@ -65,18 +69,14 @@ impl AsyncSpawnable for Application {
         self.update_state(States::Idle.into()).await?;
         let cli = cli::new();
         tracing::info!("Success: Commands parsed, processing requests...");
-        cli.handler().await?;
+        cli.handler(self.ctx.clone()).await?;
         Ok(self)
     }
 }
 
 impl From<Settings> for Application {
     fn from(cnf: Settings) -> Self {
-        Self::new(
-            Context::new(cnf, Default::default()),
-            Arc::new(Default::default()),
-            States::default().into(),
-        )
+        Self::new(Context::new(cnf), States::default().into())
     }
 }
 

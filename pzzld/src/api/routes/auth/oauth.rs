@@ -19,7 +19,8 @@ use oauth2::{
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use std::collections::HashMap;
+
+use pzzld_sdk::auth::User;
 
 static COOKIE_NAME: &str = "SESSION";
 
@@ -62,10 +63,9 @@ pub async fn token(Path(id): Path<usize>) -> Json<Value> {
 }
 
 fn oauth_client(Extension(ctx): Extension<crate::Context>) -> BasicClient {
-    let client_id = ctx.cnf.auth.id.clone();
+    let client_id = ctx.cnf.auth.id;
     let client_secret = ctx.cnf.auth.secret;
-    let redirect_url =
-        std::env::var("REDIRECT_URL").unwrap_or_else(|_| "http://localhost:9000/auth/".to_string());
+    let redirect_url = "http://localhost:8080/api".to_string();
 
     let auth_url = std::env::var("AUTH_URL")
         .unwrap_or_else(|_| "https://scsys.jetbrains.space/oauth/auth".to_string());
@@ -206,47 +206,5 @@ impl OAuth2Client {
         let id = std::env::var(id.unwrap_or("CLIENT_ID")).unwrap_or_default();
         let secret = std::env::var(secret.unwrap_or("CLIENT_SECRET")).unwrap_or_default();
         Self::new(id, secret)
-    }
-}
-
-// The user data we'll get back from Google.
-#[derive(Debug, Serialize, Deserialize)]
-pub struct User {
-    sub: String,
-    picture: Option<String>,
-    email: String,
-    name: String,
-}
-
-pub async fn get_access_token(
-    client_id: &str,
-    client_secret: &str,
-    auth_url: &str,
-    scope: &str,
-) -> String {
-    // Set up the request body
-    let mut params = HashMap::new();
-    params.insert("grant_type", "client_credentials");
-    params.insert("client_id", client_id);
-    params.insert("client_secret", client_secret);
-    params.insert("scope", scope);
-
-    // Send the request
-    let client = reqwest::Client::new();
-    let resp = client
-        .post(auth_url)
-        .form(&params)
-        .send()
-        .await
-        .expect("Failed to send request");
-
-    // Check the response status
-    if resp.status().is_success() {
-        // Parse the response body
-        let value: Value = resp.json().await.expect("Failed to parse response");
-        let access_token = value["access_token"].as_str().unwrap();
-        access_token.to_string()
-    } else {
-        "Error".to_string()
     }
 }

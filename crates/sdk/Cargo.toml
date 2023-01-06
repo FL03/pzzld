@@ -11,11 +11,14 @@ repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 
 [features]
-default = [ "core", "gateway", "wallets" ]
-full = [ "core", "gateway", "wallets" ]
+default = [ "core", "services" ]
+full = [ "core", "services" ]
+
+services = ["wallets"]
 
 core = ["pzzld-core/default"]
-gateway = ["pzzld-gateway/default"]
+# gateway = ["pzzld-gateway/default"]
+# payments = ["pzzld-payments/default"]
 wallets = ["pzzld-wallets/default"]
 
 [lib]
@@ -28,7 +31,8 @@ test = true
 
 [dependencies]
 pzzld-core = { features = [], optional = true, path = "../core", version = "0.1.0" }
-pzzld-gateway = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
+# pzzld-gateway = { features = [], optional = true, path = "../gateways", version = "0.1.0" }
+# pzzld-payments = { features = [], optional = true, path = "../payments", version = "0.1.0" }
 pzzld-wallets = { features = [], optional = true, path = "../wallets", version = "0.1.0" }
 
 [package.metadata.docs.rs]

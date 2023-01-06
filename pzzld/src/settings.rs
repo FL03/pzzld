@@ -11,7 +11,7 @@ use scsys::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct OAuth2Config {
     #[serde(rename = "client_id")]
     pub id: String,
@@ -19,14 +19,14 @@ pub struct OAuth2Config {
     pub secret: String,
     pub redirect: String,
     pub scope: Option<String>,
-    pub token: String
+    pub token: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Settings {
     pub auth: OAuth2Config,
-    pub mode: String,
     pub logger: Logger,
+    pub mode: String,
     pub server: Server,
 }
 
@@ -35,6 +35,10 @@ impl Settings {
         let mut builder = Config::builder();
         // Set defaults
         builder = builder
+            .set_default("auth.id", "")?
+            .set_default("auth.secret", "")?
+            .set_default("auth.redirect", "http://localhost:8080/api")?
+            .set_default("auth.token", "")?
             .set_default("mode", "production")?
             .set_default("logger.level", "info")?
             .set_default("server.host", "0.0.0.0")?
@@ -48,6 +52,12 @@ impl Settings {
         // Check for alternative environment variable representations
         if let Ok(v) = std::env::var("CLIENT_ID") {
             builder = builder.set_override("auth.id", v)?;
+        }
+        if let Ok(v) = std::env::var("REDIRECT_URL") {
+            builder = builder.set_override("auth.redirct", v)?;
+        }
+        if let Ok(v) = std::env::var("TOKEN_URL") {
+            builder = builder.set_override("auth.token", v)?;
         }
         if let Ok(v) = std::env::var("CLIENT_SECRET") {
             builder = builder.set_override("auth.secret", v)?;
@@ -71,15 +81,27 @@ impl Configurable for Settings {
     }
 }
 
+impl Default for OAuth2Config {
+    fn default() -> Self {
+        Self {
+            id: String::new(),
+            secret: String::new(),
+            redirect: String::from("http://localhost:8080"),
+            scope: None,
+            token: String::new(),
+        }
+    }
+}
+
 impl Default for Settings {
     fn default() -> Self {
         if let Ok(v) = Self::build() {
             v
         } else {
             Self {
-                auth: Default::default(),
-                mode: "production".to_string(),
-                logger: Logger::default(),
+                auth: OAuth2Config::default(),
+                logger: Logger::new("info".to_string()),
+                mode: "development".to_string(),
                 server: Server::new("0.0.0.0".to_string(), 8080),
             }
         }

@@ -14,7 +14,7 @@ use tower::util::ServiceExt;
 use tower_http::services::ServeDir;
 
 pub fn router() -> Router {
-    Router::new().route("/pkg", get(wasm_handler))
+    Router::new().route("/", get(wasm_handler))
 }
 
 /// Fetch some static assets from a given directory

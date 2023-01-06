@@ -12,7 +12,7 @@ pub fn new() -> Api {
 }
 
 pub fn from_context(ctx: crate::Context) -> Api {
-    Api::new(ctx.clone(), ctx.cnf.server.port)
+    Api::new(ctx.clone())
 }
 
 pub(crate) mod interface {
@@ -37,32 +37,9 @@ pub(crate) mod interface {
     }
 
     impl Api {
-        pub fn new(ctx: Context, port: u16) -> Self {
-            let server = Server::from(port);
+        pub fn new(ctx: Context) -> Self {
+            let server = Server::from(ctx.cnf.server.pieces());
             Self { ctx, server }
-        }
-        pub async fn client(&self) -> Router {
-            Router::new()
-                .nest("/api", routes::api(self.ctx.clone()))
-                .merge(routes::wasm::router())
-                .layer(
-                    TraceLayer::new_for_http()
-                        .make_span_with(DefaultMakeSpan::new().include_headers(true))
-                        .on_request(DefaultOnRequest::new().level(tracing::Level::INFO))
-                        .on_response(DefaultOnResponse::new().level(tracing::Level::INFO)),
-                )
-                .layer(SetSensitiveHeadersLayer::new(std::iter::once(
-                    AUTHORIZATION,
-                )))
-                .layer(CompressionLayer::new())
-                .layer(PropagateHeaderLayer::new(HeaderName::from_static(
-                    "x-request-id",
-                )))
-                .layer(axum::Extension(self.ctx.clone()))
-        }
-        /// Returns an owned instance of the server
-        pub fn server(&self) -> &Server {
-            &self.server
         }
         /// Quickstart the server with the outlined client
         pub async fn serve(&self) -> AsyncResult {
@@ -77,10 +54,9 @@ pub(crate) mod interface {
         type Server = Server;
 
         async fn client(&self) -> axum::Router {
-            let mut router = Router::new();
-            // Merge other routers into the base router
-            router = router.merge(routes::index::router());
-            router = router
+            Router::new()
+                .nest("/app", routes::wasm::router())
+                .merge(routes::api(self.ctx.clone()))
                 .layer(
                     TraceLayer::new_for_http()
                         .make_span_with(DefaultMakeSpan::new().include_headers(true))
@@ -94,8 +70,7 @@ pub(crate) mod interface {
                 .layer(PropagateHeaderLayer::new(HeaderName::from_static(
                     "x-request-id",
                 )))
-                .layer(axum::Extension(self.ctx.clone()));
-            router
+                .layer(axum::Extension(self.ctx.clone()))
         }
 
         fn context(&self) -> Self::Ctx {
