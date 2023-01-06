@@ -11,12 +11,12 @@ default-members = [
     "pzzld"
 ]
 exclude = [
-    "wasm",
     "xtask",
+    "wasm"
 ]
 members = [
     "crates/*",
-    "pzzld"
+    "pzzld",
 ]
 
 [profile.dev]

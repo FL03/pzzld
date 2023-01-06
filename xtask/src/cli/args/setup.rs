@@ -27,6 +27,7 @@ impl Setup {
         Ok(self)
     }
     fn commands(&self) -> Result<&Self> {
+        command("nix", vec!["flake", "update"])?;
         command("rustup", vec!["default", "nightly"])?;
         command(
             "rustup",
