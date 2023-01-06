@@ -22,6 +22,7 @@ test = true
 
 [dependencies]
 acme = { features = [], git = "https://github.com/FL03/acme", branch = "v0.2.5", version = "0.2.5" }
+axum-core = "0.3.0"
 reqwest = { features = ["json", "rustls-tls", "stream"], version = "0.11" }
 scsys = { features = [], version = "0.1.40" }
 serde = { features = ["derive"], version = "1" }
