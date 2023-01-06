@@ -6,12 +6,24 @@
 use scsys::prelude::config::{Config, Environment};
 use scsys::Hash;
 use scsys::{
-    prelude::{Configurable, Hashable, Logger, Server},
+    prelude::{Configurable, Hashable, Logger, Server, SerdeDisplay},
     try_collect_config_files, ConfigResult,
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, SerdeDisplay, Serialize)]
+pub struct Cache {
+    pub name: String,
+    pub uri: String
+}
+
+impl Default for Cache {
+    fn default() -> Self {
+        Self { name: Default::default(), uri: "redis://0.0.0.0:6379".to_string() }
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, SerdeDisplay, Serialize)]
 pub struct OAuth2Config {
     #[serde(rename = "client_id")]
     pub id: String,
@@ -22,9 +34,10 @@ pub struct OAuth2Config {
     pub token: String,
 }
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, SerdeDisplay, Serialize)]
 pub struct Settings {
     pub auth: OAuth2Config,
+    pub cache: Cache,
     pub logger: Logger,
     pub mode: String,
     pub server: Server,
@@ -39,6 +52,7 @@ impl Settings {
             .set_default("auth.secret", "")?
             .set_default("auth.redirect", "http://localhost:8080/api")?
             .set_default("auth.token", "")?
+            .set_default("cache.uri", "redis://0.0.0.0:6379")?
             .set_default("mode", "production")?
             .set_default("logger.level", "info")?
             .set_default("server.host", "0.0.0.0")?
@@ -100,22 +114,11 @@ impl Default for Settings {
         } else {
             Self {
                 auth: OAuth2Config::default(),
+                cache: Cache::default(),
                 logger: Logger::new("info".to_string()),
                 mode: "development".to_string(),
                 server: Server::new("0.0.0.0".to_string(), 8080),
             }
         }
-    }
-}
-
-impl std::fmt::Display for OAuth2Config {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap())
-    }
-}
-
-impl std::fmt::Display for Settings {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }

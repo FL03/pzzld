@@ -6,6 +6,10 @@ secret = ""
 redirect = ""
 token = ""
 
+[cache]
+name = "redis"
+uri = "redis://localhost:6379"
+
 [logger]
 level = "info"
 
