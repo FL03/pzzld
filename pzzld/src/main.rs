@@ -13,6 +13,7 @@ pub use self::{context::*, settings::*, states::*};
 
 pub mod api;
 pub mod cli;
+pub mod data;
 pub mod proxy;
 
 pub(crate) mod context;
@@ -75,10 +76,7 @@ impl AsyncSpawnable for Application {
 
 impl From<Settings> for Application {
     fn from(cnf: Settings) -> Self {
-        Self::new(
-            Context::new(cnf),
-            States::default().into(),
-        )
+        Self::new(Context::new(cnf), States::default().into())
     }
 }
 

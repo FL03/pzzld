@@ -19,7 +19,7 @@ pub struct OAuth2Config {
     pub secret: String,
     pub redirect: String,
     pub scope: Option<String>,
-    pub token: String
+    pub token: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -83,12 +83,12 @@ impl Configurable for Settings {
 
 impl Default for OAuth2Config {
     fn default() -> Self {
-        Self { 
+        Self {
             id: String::new(),
             secret: String::new(),
             redirect: String::from("http://localhost:8080"),
             scope: None,
-            token: String::new()
+            token: String::new(),
         }
     }
 }
@@ -102,8 +102,7 @@ impl Default for Settings {
                 auth: OAuth2Config::default(),
                 logger: Logger::new("info".to_string()),
                 mode: "development".to_string(),
-                server: Server::new("0.0.0.0".to_string(), 8080)
-
+                server: Server::new("0.0.0.0".to_string(), 8080),
             }
         }
     }

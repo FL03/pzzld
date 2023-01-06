@@ -33,7 +33,7 @@ pub(crate) mod interface {
     #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
     pub struct Api {
         pub ctx: Context,
-        pub server: Server
+        pub server: Server,
     }
 
     impl Api {
@@ -41,7 +41,19 @@ pub(crate) mod interface {
             let server = Server::from(ctx.cnf.server.pieces());
             Self { ctx, server }
         }
-        pub async fn client(&self) -> Router {
+        /// Quickstart the server with the outlined client
+        pub async fn serve(&self) -> AsyncResult {
+            self.server().serve(self.client().await).await
+        }
+    }
+
+    #[async_trait::async_trait]
+    impl WebBackend for Api {
+        type Ctx = Context;
+
+        type Server = Server;
+
+        async fn client(&self) -> axum::Router {
             Router::new()
                 .nest("/app", routes::wasm::router())
                 .merge(routes::api(self.ctx.clone()))
@@ -60,52 +72,15 @@ pub(crate) mod interface {
                 )))
                 .layer(axum::Extension(self.ctx.clone()))
         }
-        /// Returns an owned instance of the server
-        pub fn server(&self) -> &Server {
-            &self.server
+
+        fn context(&self) -> Self::Ctx {
+            self.ctx.clone()
         }
-        /// Quickstart the server with the outlined client
-        pub async fn serve(&self) -> AsyncResult {
-            self.server().serve(self.client().await).await
+
+        fn server(&self) -> Self::Server {
+            self.server.clone()
         }
     }
-
-    // #[async_trait::async_trait]
-    // impl WebBackend for Api {
-    //     type Ctx = Context;
-
-    //     type Server = Server;
-
-    //     async fn client(&self) -> axum::Router {
-    //         let mut router = Router::new();
-    //         // Merge other routers into the base router
-    //         router = router.merge(routes::index::router());
-    //         router = router
-    //             .layer(
-    //                 TraceLayer::new_for_http()
-    //                     .make_span_with(DefaultMakeSpan::new().include_headers(true))
-    //                     .on_request(DefaultOnRequest::new().level(tracing::Level::INFO))
-    //                     .on_response(DefaultOnResponse::new().level(tracing::Level::INFO)),
-    //             )
-    //             .layer(SetSensitiveHeadersLayer::new(std::iter::once(
-    //                 AUTHORIZATION,
-    //             )))
-    //             .layer(CompressionLayer::new())
-    //             .layer(PropagateHeaderLayer::new(HeaderName::from_static(
-    //                 "x-request-id",
-    //             )))
-    //             .layer(axum::Extension(self.ctx.clone()));
-    //         router
-    //     }
-
-    //     fn context(&self) -> Self::Ctx {
-    //         self.ctx.clone()
-    //     }
-
-    //     fn server(&self) -> Self::Server {
-    //         self.server.clone()
-    //     }
-    // }
 
     impl std::fmt::Display for Api {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -16,20 +16,6 @@ use std::net::SocketAddr;
 use tokio::net::TcpStream;
 use tower::{make::Shared, ServiceExt};
 
-pub trait ReqRes {
-    type Req;
-    type Res;
-    fn request(self) -> Request<Self::Req>;
-    fn response(self) -> Response<Self::Res>;
-}
-
-pub trait Proxiable: Send + Sync {}
-
-#[async_trait::async_trait]
-pub trait Conduit {
-    async fn tunnel(mut upgraded: Upgraded, addr: String) -> IOResult;
-}
-
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Proxy {
     pub address: SocketAddr,
@@ -84,7 +70,7 @@ pub async fn proxy(req: Request<Body>) -> AsyncResult<Response> {
     }
 }
 
-pub async fn tunnel(mut upgraded: Upgraded, addr: String) -> std::io::Result<()> {
+pub async fn tunnel(mut upgraded: Upgraded, addr: String) -> IOResult {
     let mut server = TcpStream::connect(addr).await?;
 
     let (from_client, from_server) =
