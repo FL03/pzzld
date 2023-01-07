@@ -18,20 +18,33 @@ pub enum Commands {
 }
 
 impl Commands {
+    pub fn builder(&self) -> Result<&Self> {
+        Builder::default().handler()?;
+        Ok(self)
+    }
     pub fn testing(&self) -> Result<&Self> {
-        tracing::info!("Testing the workspace...");
         command(
             "cargo",
             vec!["test", "--all", "--all-features"],
         )?;
         Ok(self)
     }
+    pub fn rustfmt(&self) -> Result<&Self> {
+        command("cargo", vec!["fmt", "--all"])?;
+        Ok(self)
+    }
+    pub fn clippy(&self) -> Result<&Self> {
+        command("cargo", vec!["clippy", "--all", "--allow-dirty", "--fix"])?;
+        Ok(self)
+    }
     pub fn auto(&self) -> Result<&Self> {
         tracing::info!("Formatting the codespace...");
-        command("cargo", vec!["fmt", "--all"])?;
+        self.rustfmt()?;
         tracing::info!("Analyzing the codespace...");
-        command("cargo", vec!["clippy", "--all", "--allow-dirty", "--fix"])?;
-        Builder::default().handler()?;
+        self.clippy()?;
+        tracing::info!("Initializing the build stages...");
+        self.builder()?;
+        tracing::info!("Testing the workspace...");
         self.testing()?;
         Ok(self)
     }

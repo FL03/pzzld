@@ -5,19 +5,12 @@ let
     overlays = [ (import rust-overlay) ];
   };
 
-  rustVersion = "1.66.0";
+  rustVersion = "1.68.0";
   wasmUnknownUknown = "wasm32-unknown-unknown";
   wasm32Wasi = "wasm32-wasi";
 
-  rustDefaultTarget = rustPkgs.rust-bin.stable.${rustVersion}.default;
-
   rustWithWasmTarget = rustPkgs.rust-bin.nightly.${rustVersion}.default.override {
     targets = [ wasmUnknownUknown ];
-  };
-
-  rustPlatform = makeRustPlatform {
-    cargo = rustDefaultTarget;
-    rustc = rustDefaultTarget;
   };
 
   rustPlatformWasm = makeRustPlatform {
@@ -38,6 +31,6 @@ let
   };
 in {
   workspace = pkgs.rustPlatformWasm.buildRustPackage (common // {
-    cargoBuildFlags = "--release --workspace";
+    cargoBuildFlags = "--release --workspace --target wasm32-unknown-unknown";
   });
 }

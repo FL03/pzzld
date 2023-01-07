@@ -10,40 +10,24 @@ name = "pzzld"
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 
-[[bin]]
-bench = true
-name = "pzzld"
-path = "src/main.rs"
-test = false
+[lib]
+crate-type = [ "cdylib", "rlib" ]
+test = true
 
 [build-dependencies]
-
-[dependencies]
-acme = { features = ["net"], git = "https://github.com/FL03/acme", branch = "v0.2.5", version = "0.2.5" }
-pzzld-sdk = { features = ["full"], path = "../crates/sdk", version = "0.1.0" }
-scsys = { features = [], version = "0.1.40" }
-
-async-session = "3.0.0"
-async-trait = "0.1.60"
-axum = { features = ["headers", "http2", "macros", "ws"], version = "0.6" }
-clap = { features = ["derive"], version = "4" }
-futures = "0.3"
-http = "0.2"
-hyper = { features = [], version = "0.14" }
-oauth2 = "4.3.0"
-redis = { features = ["tokio"], version = "0.22.1" }
-reqwest = { features = ["json", "rustls-tls", "stream"], version = "0.11.13" }
-serde = { features = ["derive"], version = "1" }
-serde_json = "1"
-siwe = "0.5"
-strum = { features = ["derive"], version = "0.24.1" }
-tokio = { features = ["full"], version = "1" }
-tower = "0.4.13"
-tower-http = { features = ["full"], version = "0.3" }
-tracing = "0.1.37"
-tracing-subscriber = { features = ["env-filter"], version = "0.3" }
+substrate-wasm-builder = "5.0.0"
 
 [dev-dependencies]
+wasm-bindgen-test = "0.3"
+
+[dependencies]
+futures = "0.3.25"
+gloo = { features = [ "futures" ], version = "0.8" }
+js-sys = { features = [], version = "0.3.60" }
+serde = { features = ["derive"], version = "1" }
+serde_json = "1"
+strum = { features = ["derive"], version = "0.24.1" }
+wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2.83"}
 
 [package.metadata.docs.rs]
 all-features = true

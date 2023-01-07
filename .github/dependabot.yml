@@ -12,7 +12,15 @@ updates:
     directory: /
     schedule:
         interval: daily
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+        interval: daily
   - package-ecosystem: cargo
+    directory: /pzzld
+    schedule:
+        interval: daily
+  - package-ecosystem: npm
     directory: /pzzld
     schedule:
         interval: daily
@@ -20,27 +28,5 @@ updates:
     directory: /xtask
     schedule:
         interval: daily
-  - package-ecosystem: cargo
-    directory: /wasm
-    schedule:
-        interval: daily
-  - package-ecosystem: cargo
-    directory: /crates/compilers
-    schedule:
-        interval: daily
-  - package-ecosystem: cargo
-    directory: /crates/core
-    schedule:
-        interval: daily
-  - package-ecosystem: cargo
-    directory: /crates/gateways
-    schedule:
-        interval: daily
-  - package-ecosystem: cargo
-    directory: /crates/pzzld
-    schedule:
-        interval: daily
-  - package-ecosystem: cargo
-    directory: /crates/wallets
-    schedule:
-        interval: daily
+
+

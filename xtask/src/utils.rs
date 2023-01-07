@@ -45,6 +45,10 @@ pub fn execute_bundle(bundle: HashMap<&str, Vec<Vec<&str>>>) -> Result<()> {
     Ok(())
 }
 /// Fetch the project root unless specified otherwise with a CARGO_MANIFEST_DIR env variable
+pub fn package_name() -> String {
+    env!("CARGO_PKG_NAME").to_string()
+}
+/// Fetch the project root unless specified otherwise with a CARGO_MANIFEST_DIR env variable
 pub fn project_root() -> PathBuf {
     Path::new(&env!("CARGO_MANIFEST_DIR"))
         .ancestors()

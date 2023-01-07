@@ -6,6 +6,9 @@ FROM base as builder-base
 
 RUN apt-get install -y \
     protobuf-compiler
+RUN rustup default nightly \
+    rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly \
+    npm install -g wasm-pack
 
 FROM builder-base as builder
 
@@ -15,7 +18,7 @@ ADD . /app
 WORKDIR /app
 
 COPY . .
-RUN cargo build --release -v --workspace
+RUN wasm-pack build pzzld --
 
 FROM debian:buster-slim as runner-base
 

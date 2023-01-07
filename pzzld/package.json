@@ -1,0 +1,14 @@
+{
+    "license": "Apache-2.0",
+    "name": "@pzzld/wasm",
+    "scripts": {
+        "build": "npm run wasm build .",
+        "prepare": "npm run wasm prepare .",
+        "preinstall": "npm install -g wasm-pack",
+        "test": "wasm-pack test --node .",
+        "wasm": "wasm-pack"
+    },
+
+    "type": "commonjs",
+    "version": "0.1.0"
+}
