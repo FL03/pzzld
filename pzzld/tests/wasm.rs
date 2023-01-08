@@ -1,3 +1,5 @@
+use wasm_bindgen::prelude::JsValue;
+use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::wasm_bindgen_test;
 
 #[cfg(test)]
@@ -8,3 +10,10 @@ fn lib_compiles() {
     assert_eq!(a, 4);
 }
 
+#[cfg(test)]
+#[wasm_bindgen_test]
+async fn test_fetch() {
+    let url = "https://google.com";
+
+    assert!(true);
+}

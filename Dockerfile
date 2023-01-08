@@ -6,6 +6,7 @@ FROM base as builder-base
 
 RUN apt-get install -y \
     protobuf-compiler
+
 RUN rustup default nightly \
     rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly \
     npm install -g wasm-pack
@@ -14,33 +15,21 @@ FROM builder-base as builder
 
 ENV CARGO_TERM_COLOR=always
 
-ADD . /app
-WORKDIR /app
+ADD . /workspace
+WORKDIR /workspace
 
 COPY . .
-RUN wasm-pack build pzzld --
+RUN wasm-pack build pzzld --release
 
-FROM debian:buster-slim as runner-base
-
-RUN apt-get update -y && apt-get upgrade -y 
-
-RUN apt-get install -y libssl-dev protobuf-compiler
-
-FROM runner-base as runner
-
-ENV RUST_LOG="info" \
-    SERVER_PORT=8080 
+FROM scratch
 
 COPY --chown=55 .config /config
 VOLUME ["/config"]
 
-COPY --from=builder /app/target/release/pzzld /bin/pzzld
+RUN mkdir data
+VOLUME ["/data"]
 
-FROM runner
+COPY --from=builder /workspace/pzzld/pkg /app
+VOLUME [ "/app" ]
 
-EXPOSE 80
-EXPOSE ${SERVER_PORT}
-EXPOSE 6379
-
-ENTRYPOINT [ "pzzld" ]
-CMD [ "system", "--up" ]
+WORKDIR /app
