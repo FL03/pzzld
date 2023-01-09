@@ -3,62 +3,72 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-pub use self::utils::*;
+pub use self::{commands::*, utils::*};
 
+pub(crate) mod commands;
 pub(crate) mod utils;
 
-pub mod cli;
-
-use clap::{arg, command, value_parser, Arg, Command};
+use axum::{
+    body::{boxed, Body, BoxBody},
+    http::{Request, Response, StatusCode, Uri},
+    response::IntoResponse,
+    routing::get_service
+};
+use clap::{arg, command, value_parser, ArgAction, ArgMatches, Command};
 use std::path::PathBuf;
+use tower::ServiceExt;
+use tower_http::services::ServeDir;
 
-fn main() -> anyhow::Result<()> {
+#[tokio::main(flavor = "current_thread")]
+async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
     tracing::info!("Welcome to xtask...");
-    cli()?;
+    wasm_server().await?;
 
-    let handle = std::thread::spawn(move || {
-        cli::handle().join().unwrap();
-    });
-    handle.join().ok().unwrap();
+    cli()?;
 
     Ok(())
 }
 
-pub fn cli() -> anyhow::Result<()> {
-    let matches = command!()
-        .propagate_version(true)
-        .subcommand_required(false)
-        .arg_required_else_help(true)
-        .subcommand(
-            Command::new("command")
-                .about("Various integrations")
-                .arg(
-                    arg!(--nix [NIX] "Interact with the nix package manager")
-            ),
-        )
+pub fn base_matches(sc: Command) -> ArgMatches {
+    command!()
         .arg(
             arg!(
-                -c --config <FILE> "Sets a custom config file"
+                config: -c --config <FILE> "Sets a custom config file"
             )
             // We don't have syntax yet for optional options, so manually calling `required`
             .required(false)
             .value_parser(value_parser!(PathBuf)),
         )
-        .arg(arg!(
-            -d --debug ... "Turn debugging information on"
-        ))
         .arg(
-            arg!(-p --port <PORT>)
-                .help("Network port to use")
-                .value_parser(value_parser!(u16).range(1..)).default_value("8080"),
+            arg!(debug:
+                -d --debug ... "Turn debugging information on"
+            )
+            .action(ArgAction::SetTrue),
         )
-        .get_matches();
-    
-    let port: u16 = *matches
-        .get_one::<u16>("PORT")
-        .unwrap();
-    
+        .arg(
+            arg!(port: -p --port <PORT>)
+                .help("Network port to use")
+                .value_parser(value_parser!(u16).range(1..))
+                .default_value("8080"),
+        )
+        .arg_required_else_help(true)
+        .propagate_version(true)
+        .subcommand(sc)
+        .subcommand_required(false)
+        .get_matches()
+}
+
+pub fn cli() -> anyhow::Result<()> {
+    let matches = base_matches(
+        Command::new("actor")
+            .about("Various integrations")
+            .arg(arg!(build: -b --build <BUILD> "Build the workspace"))
+            .arg(arg!(build: -b --build <BUILD> "Build the workspace"))
+    );
+
+    let port: u16 = *matches.get_one::<u16>("PORT").unwrap();
+
     println!("{:?}", port);
     Ok(())
 }
@@ -85,4 +95,49 @@ macro_rules! cmd {
             )*
         }
     };
+}
+
+pub async fn wasm_server() -> anyhow::Result<()> {
+    let serve_dir = get_service(ServeDir::new("/pkg")).handle_error(handle_error);
+    let app = axum::Router::new()
+        .nest_service("/", serve_dir);
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+    Ok(())
+}
+
+async fn handle_error(_err: std::io::Error) -> impl IntoResponse {
+    (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong...")
+}
+
+pub async fn file_handler(uri: Uri) -> Result<Response<BoxBody>, (StatusCode, String)> {
+    let res = get_static_file(uri.clone()).await?;
+    println!("{:?}", res);
+
+    if res.status() == StatusCode::NOT_FOUND {
+        // try with `.html`
+        // TODO: handle if the Uri has query parameters
+        match format!("{}.html", uri).parse() {
+            Ok(uri_html) => get_static_file(uri_html).await,
+            Err(_) => Err((StatusCode::INTERNAL_SERVER_ERROR, "Invalid URI".to_string())),
+        }
+    } else {
+        Ok(res)
+    }
+}
+
+async fn get_static_file(uri: Uri) -> Result<Response<BoxBody>, (StatusCode, String)> {
+    let req = Request::builder().uri(uri).body(Body::empty()).unwrap();
+
+    // `ServeDir` implements `tower::Service` so we can call it with `tower::ServiceExt::oneshot`
+    // When run normally, the root is the workspace root
+    match ServeDir::new("../pzzld").oneshot(req).await {
+        Ok(res) => Ok(res.map(boxed)),
+        Err(err) => Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Something went wrong: {}", err),
+        )),
+    }
 }

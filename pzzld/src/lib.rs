@@ -25,3 +25,5 @@ pub async fn redirect(url: &str) -> JsResult {
     request(url).redirect(RequestRedirect::Follow).send().await?;
     Ok(())
 }
+
+

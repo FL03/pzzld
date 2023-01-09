@@ -16,7 +16,6 @@
         "wasm:install": "npm install --workspace=@pzzld/wasm",
         "wasm:test": "npm run test --workspace=@pzzld/wasm"
     },
-
     "type": "commonjs",
     "version": "0.1.0",
     "workspaces": [
