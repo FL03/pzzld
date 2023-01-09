@@ -12,10 +12,14 @@ publish = false
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0" # TODO: Update the package version
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+test = true
+
 [[bin]]
 bench = false
 name = "xtask"
-path = "src/main.rs"
+path = "src/bin/xtask/main.rs"
 test = false
 
 [build-dependencies]
