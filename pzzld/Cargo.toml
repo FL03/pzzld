@@ -1,6 +1,7 @@
 [package]
 authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
 categories = []
+default-run = "pzzld"
 description = "Puzzled"
 edition = "2021"
 homepage = "https://github.com/FL03/pzzld/wiki"
@@ -14,8 +15,12 @@ version = "0.1.0"
 crate-type = [ "cdylib", "rlib" ]
 test = true
 
+[[bin]]
+name = "pzzld"
+path = "src/bin/app/main.rs"
+
 [build-dependencies]
-substrate-wasm-builder = "5.0.0"
+substrate-wasm-builder = "6.0.0"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"
@@ -27,8 +32,17 @@ js-sys = { features = [], version = "0.3.60" }
 serde = { features = ["derive"], version = "1" }
 serde_json = "1"
 strum = { features = ["derive"], version = "0.24.1" }
+yew = { features = ["csr", "ssr"], version = "0.20" }
 wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2.83"}
 wasm-bindgen-futures = "0.4"
+
+[dependencies.web-sys]
+features = [
+    "CanvasRenderingContext2d",
+    "HtmlCanvasElement",
+    "Node"
+]
+version = "0.3.60"
 
 [package.metadata.docs.rs]
 all-features = true

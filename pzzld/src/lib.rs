@@ -3,27 +3,17 @@
     Contrib: FL03 <jo3mccain@icloud.com> (https://github.com/FL03)
     Description: ... Summary ...
 */
-use gloo::net::http::{Request, Response, RequestRedirect};
-use wasm_bindgen::prelude::*;
+pub use self::{primitives::*, utils::*};
+
+pub(crate) mod utils;
 
 pub mod api;
 
 
-pub type JsResult<T = ()> = Result<T, JsError>;
 
-pub async fn fetch(url: &str) -> JsResult<Response> {
-    let res = request(url).send().await?;
-    Ok(res)
+pub(crate) mod primitives {
+    use wasm_bindgen::prelude::JsError;
+
+    /// Type alias for a [Result] of type T and error [JsError]
+    pub type JsResult<T = ()> = Result<T, JsError>;
 }
-
-pub fn request(url: &str) -> Request {
-    Request::new(url)
-}
-
-
-pub async fn redirect(url: &str) -> JsResult {
-    request(url).redirect(RequestRedirect::Follow).send().await?;
-    Ok(())
-}
-
-
