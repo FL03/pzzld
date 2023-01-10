@@ -4,5 +4,5 @@ tasks:
       rustup component add clippy rustfmt --toolchain nightly
       rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly
       npm install -g npm@9.2.0 wasm-pack 
-      cargo install wasm-bindgen-cli trunk
+      cargo install dioxus-cli wasm-bindgen-cli trunk
     command: cargo watch -x build

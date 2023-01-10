@@ -1,7 +1,7 @@
 [package]
 authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
 categories = []
-default-run = "app"
+default-run = "web"
 description = "Puzzled"
 edition = "2021"
 homepage = "https://github.com/FL03/pzzld/wiki"
@@ -16,8 +16,8 @@ crate-type = [ "cdylib", "rlib" ]
 test = true
 
 [[bin]]
-name = "app"
-path = "src/bin/app/main.rs"
+name = "web"
+path = "src/bin/web/main.rs"
 test = false
 
 [build-dependencies]
@@ -27,13 +27,16 @@ substrate-wasm-builder = "6.0.0"
 wasm-bindgen-test = "0.3"
 
 [dependencies]
+dioxus = { features = ["macro"], version = "0.3" }
+dioxus-web = { features = ["hydrate"], version = "0.3" }
+
 futures = "0.3.25"
 gloo = { features = [ "futures" ], version = "0.8" }
 js-sys = { features = [], version = "0.3.60" }
 serde = { features = ["derive"], version = "1" }
 serde_json = "1"
 strum = { features = ["derive"], version = "0.24.1" }
-yew = { features = ["csr", "ssr"], version = "0.20" }
+# yew = { features = ["csr", "ssr"], version = "0.20" }
 wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2.83"}
 wasm-bindgen-futures = "0.4"
 
