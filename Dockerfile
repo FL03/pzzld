@@ -26,9 +26,6 @@ FROM scratch
 COPY --chown=55 .config /config
 VOLUME ["/config"]
 
-RUN mkdir data
-VOLUME ["/data"]
-
 COPY --from=builder /workspace/pzzld/pkg /app
 VOLUME [ "/app" ]
 
