@@ -7,9 +7,10 @@ FROM base as builder-base
 RUN apt-get install -y \
     protobuf-compiler
 
-RUN rustup default nightly \
-    rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly \
-    npm install -g wasm-pack
+RUN rustup default nightly && \
+    rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly && \
+    npm install -g wasm-pack && \
+    cargo install wasm-bindgen-cli
 
 FROM builder-base as builder
 
