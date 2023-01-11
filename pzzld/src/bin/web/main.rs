@@ -8,5 +8,5 @@ use pzzld::app;
 use dioxus_web::Config;
 
 fn main() {
-    dioxus_web::launch_cfg(app, Config::new().hydrate(true).rootname("Puzzled"));
+    dioxus_web::launch_with_props(app, (), Config::new().hydrate(true));
 }
