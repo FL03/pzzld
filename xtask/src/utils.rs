@@ -8,10 +8,10 @@ use std::path::{Path, PathBuf};
 use std::{collections::HashMap, fs, io, process::Command};
 
 ///
-pub fn command(program: &str, args: Vec<&str>) -> Result<()> {
+pub fn command(program: &str, args: &[&str]) -> Result<()> {
     let mut cmd = Command::new(program);
     cmd.current_dir(project_root());
-    cmd.args(args.as_slice()).status()?;
+    cmd.args(args).status()?;
     Ok(())
 }
 ///

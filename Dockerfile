@@ -30,3 +30,8 @@ COPY --from=builder /workspace/dist /app
 VOLUME [ "/app" ]
 
 WORKDIR /app
+
+FROM builder as xtask
+
+ENTRYPOINT [ "cargo", "xtask" ]
+CMD [ "action", "--serve"]

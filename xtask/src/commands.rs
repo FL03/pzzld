@@ -15,11 +15,11 @@ pub fn builder(release: bool, workspace: bool) -> Result<()> {
     if workspace {
         args.push("--workspace");
     }
-    command("cargo", args)
+    command("cargo", args.as_slice())
 }
 ///
 pub fn clippy() -> Result<()> {
-    command("cargo", vec!["clippy", "--all", "--allow-dirty", "--fix"])
+    command("cargo", &["clippy", "--all", "--allow-dirty", "--fix"])
 }
 ///
 pub fn runner(release: bool) -> Result<()> {
@@ -29,11 +29,11 @@ pub fn runner(release: bool) -> Result<()> {
     }
     args.push("--");
     args.push("--h");
-    command("cargo", args.clone())
+    command("cargo", args.as_slice())
 }
 ///
 pub fn rustfmt() -> Result<()> {
-    command("cargo", vec!["fmt", "--all"])
+    command("cargo", &["fmt", "--all"])
 }
 
 pub fn setup(extras: bool) -> Result<()> {
@@ -43,11 +43,11 @@ pub fn setup(extras: bool) -> Result<()> {
         std::fs::remove_dir_all(&dist_dir())?;
         std::fs::create_dir_all(&dist_dir())?;
     };
-    command("nix", vec!["flake", "update"])?;
-    command("rustup", vec!["default", "nightly"])?;
+    command("nix", &["flake", "update"])?;
+    command("rustup", &["default", "nightly"])?;
     command(
         "rustup",
-        vec![
+        &[
             "target",
             "add",
             "wasm32-unknown-unknown",
@@ -59,7 +59,7 @@ pub fn setup(extras: bool) -> Result<()> {
     if extras {
         command(
             "rustup",
-            vec![
+            &[
                 "component",
                 "add",
                 "clippy",
@@ -68,11 +68,11 @@ pub fn setup(extras: bool) -> Result<()> {
                 "nightly",
             ],
         )?;
-        command("npm", vec!["install", "-g", "wasm-pack"])?;
+        command("npm", &["install", "-g", "wasm-pack"])?;
     };
     Ok(())
 }
 ///
 pub fn testing() -> Result<()> {
-    command("cargo", vec!["test", "--all", "--all-features"])
+    command("cargo", &["test", "--all", "--all-features"])
 }
