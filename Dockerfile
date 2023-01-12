@@ -9,8 +9,7 @@ RUN apt-get install -y \
 
 RUN rustup default nightly && \
     rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly && \
-    npm install -g wasm-pack && \
-    cargo install wasm-bindgen-cli
+    cargo install trunk wasm-bindgen-cli
 
 FROM builder-base as builder
 
@@ -20,14 +19,21 @@ ADD . /workspace
 WORKDIR /workspace
 
 COPY . .
-RUN wasm-pack build pzzld --release
+RUN trunk build
 
-FROM scratch
+FROM scratch as wasm
 
 COPY --chown=55 .config /config
 VOLUME ["/config"]
 
-COPY --from=builder /workspace/pzzld/pkg /app
+COPY --from=builder /workspace/dist /app
 VOLUME [ "/app" ]
 
 WORKDIR /app
+
+FROM builder
+
+EXPOSE 8080
+
+ENTRYPOINT [ "trunk" ]
+CMD [ "serve" ]
