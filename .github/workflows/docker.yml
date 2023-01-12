@@ -17,33 +17,20 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        workdir:
-          - .
-        image: 
-          - pzzld
     steps:
       - uses: actions/checkout@v3
       - name: Build the Docker image
-        run: docker buildx build --tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }} ${{ matrix.workdir }}
+        run: docker buildx build --tag pzzld:latest pzzld
   publish:
+    needs: build
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        dockerfile:
-          - Dockerfile
-        image: 
-          - pzzld
     steps:
     - uses: actions/checkout@v3
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
-        dockerfile: ${{ matrix.dockerfile }}
-        name: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}
+        dockerfile: pzzld/Dockerfile
+        name: ${{ secrets.DOCKERHUB_USERNAME }}/pzzld
         password: ${{ secrets.DOCKERHUB_TOKEN }}
         snapshot: true
         username: ${{ secrets.DOCKERHUB_USERNAME }}

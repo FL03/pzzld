@@ -21,12 +21,9 @@ WORKDIR /workspace
 COPY . .
 RUN trunk build
 
-FROM scratch as wasm
+FROM builder
 
-COPY --chown=55 .config /config
-VOLUME ["/config"]
+EXPOSE 8080
 
-COPY --from=builder /workspace/dist /app
-VOLUME [ "/app" ]
-
-WORKDIR /app
+ENTRYPOINT [ "trunk" ]
+CMD [ "serve" ]
