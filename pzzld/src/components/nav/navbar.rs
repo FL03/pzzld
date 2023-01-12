@@ -16,7 +16,7 @@ pub struct State {
 pub fn NavBar(cx: Scope<State>) -> Element {
     cx.render(
         rsx!(
-            div { class: "container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center",
+            div { class: "flex flex-nowrap items-center justify-center bg-transparent prose prose-invert min-w-full max-w-screen my-0 p-3 sticky top-0 z-50",
                 a { class: "flex title-font font-medium items-center text-white mb-4 md:mb-0", href: "/",
                     StacksIcon {}
                     span { class: "ml-3 text-xl", "{cx.props.banner}"}
