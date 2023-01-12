@@ -18,6 +18,9 @@ ENV CARGO_TERM_COLOR=always
 ADD . /workspace
 WORKDIR /workspace
 
+COPY static ./static
+VOLUME [ "/static" ]
+
 COPY . .
 RUN trunk build
 

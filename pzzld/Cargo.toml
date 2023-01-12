@@ -29,7 +29,7 @@ wasm-bindgen-test = "0.3"
 [dependencies]
 dioxus = { features = ["macro"], version = "0.3" }
 dioxus-web = { features = ["hydrate"], version = "0.3" }
-
+ethers = { features = ["abigen", "legacy", "ws"], version = "1" }
 futures = "0.3.25"
 gloo = { features = [ "futures" ], version = "0.8" }
 js-sys = { features = [], version = "0.3.60" }
