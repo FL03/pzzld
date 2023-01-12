@@ -9,6 +9,7 @@ pub(crate) mod app;
 pub(crate) mod utils;
 
 pub mod actors;
+pub mod components;
 
 pub(crate) mod primitives {
     use wasm_bindgen::prelude::JsError;

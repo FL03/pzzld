@@ -3,33 +3,23 @@
     Contrib: FL03 <jo3mccain@icloud.com> (https://github.com/FL03)
     Description: ... Summary ...
 */
-#![allow(non_snake_case)]
+use crate::components::nav::navbar::NavBar;
 use dioxus::prelude::*;
+
+#[derive(Clone, Debug, Default, Eq, Hash, PartialEq, Props)]
+pub struct Application {
+    name: String,
+}
 
 /// The base application object to be launched
 pub fn app(cx: Scope) -> Element {
+    let banner = "Puzzled".to_string();
+
     cx.render(rsx!(
         div { class: "flex flex-col m-0 p-0 z-0 min-h-screen min-w-full max-w-screen bg-inherit text-black dark:text-white",
             header { class: "text-gray-400 bg-gray-900 body-font",
-                div { class: "container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center",
-                    a { class: "flex title-font font-medium items-center text-white mb-4 md:mb-0",
-                        StacksIcon {}
-                        span { class: "ml-3 text-xl", "Hello Dioxus!"}
-                    }
-                    nav { class: "md:ml-auto flex flex-wrap items-center text-base justify-center",
-                        a { class: "mr-5 hover:text-white", "First Link"}
-                        a { class: "mr-5 hover:text-white", "Second Link"}
-                        a { class: "mr-5 hover:text-white", "Third Link"}
-                        a { class: "mr-5 hover:text-white", "Fourth Link"}
-                    }
-                    button {
-                        class: "inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0",
-                        "Button"
-                        RightArrowIcon {}
-                    }
-                }
+                NavBar { banner: banner.to_string() }
             }
-
             section { class: "text-gray-400 bg-gray-900 body-font",
                 div { class: "container mx-auto flex px-5 py-24 md:flex-row flex-col items-center",
                     div { class: "lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center",
@@ -66,36 +56,6 @@ pub fn app(cx: Scope) -> Element {
                     }
                 }
             }
-        }
-    ))
-}
-
-pub fn StacksIcon(cx: Scope) -> Element {
-    cx.render(rsx!(
-        svg {
-            fill: "none",
-            stroke: "currentColor",
-            stroke_linecap: "round",
-            stroke_linejoin: "round",
-            stroke_width: "2",
-            class: "w-10 h-10 text-white p-2 bg-indigo-500 rounded-full",
-            view_box: "0 0 24 24",
-            path { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"}
-        }
-    ))
-}
-
-pub fn RightArrowIcon(cx: Scope) -> Element {
-    cx.render(rsx!(
-        svg {
-            fill: "none",
-            stroke: "currentColor",
-            stroke_linecap: "round",
-            stroke_linejoin: "round",
-            stroke_width: "2",
-            class: "w-4 h-4 ml-1",
-            view_box: "0 0 24 24",
-            path { d: "M5 12h14M12 5l7 7-7 7"}
         }
     ))
 }

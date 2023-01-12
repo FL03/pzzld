@@ -1,0 +1,9 @@
+[build]
+dist = ".artifacts/dist"
+target = "pzzld/index.html"
+
+
+# [[hooks]]
+# stage = "build"
+# command = "sh"
+# command_arguments = ["-c", "npx tailwindcss-cli build static/tailwind.css -o $TRUNK_STAGING_DIR/tailwind.css"]

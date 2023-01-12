@@ -1,5 +1,13 @@
 {
+    "author": {
+        "email": "jo3mccain@icloud.com",
+        "name": "FL03",
+        "url": "https://github.com/FL03"
+    },
+    "license": "Apache-2.0",
     "name": "@pzzld/wasm",
+    "readme": "https://github.com/FL03/pzzld/#README",
+    "repository": "https://github.com/FL03/pzzld",
     "scripts": {
         "build": "npm run wasm build .",
         "prepare": "npm run wasm prepare .",
