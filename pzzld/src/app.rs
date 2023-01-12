@@ -30,7 +30,7 @@ pub fn app(cx: Scope) -> Element {
                         p {
                             class: "mb-8 leading-relaxed",
 
-                            "Welcome to Puzzled, a "
+                            "Welcome to Puzzled, a personal Ethereum namespace where I try out new features proposed for the scsys ecosystem."
 
                         }
                         div { class: "flex justify-center",
