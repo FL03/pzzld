@@ -71,11 +71,17 @@ pub fn cli() -> anyhow::Result<()> {
 }
 
 pub struct System {
-    pub client: axum::Router
+    pub workdir: String
+}
+
+impl System {
+    pub fn new(workdir: Option<String>) -> Self {
+        Self { workdir: workdir.unwrap_or_else(|| "/pkg".to_string()) }
+    }
 }
 
 pub async fn wasm_server() -> anyhow::Result<()> {
-    let serve_dir = get_service(ServeDir::new("/pkg")).handle_error(handle_error);
+    let serve_dir = get_service(ServeDir::new("/dist")).handle_error(handle_error);
     let app = axum::Router::new()
         .nest_service("/", serve_dir);
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
