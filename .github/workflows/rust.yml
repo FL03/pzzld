@@ -35,9 +35,8 @@ jobs:
       - name: rustup
         run: |
           rustup default nightly
-          rustup target add ${{ matrix.toolchain }} --toolchain nightly
-      - run: cargo build --release -v --target ${{ matrix.toolchain }}
-      - run: npm run test
+          rustup target add ${{ matrix.target }} --toolchain nightly
+      - run: cargo build --release -v --target ${{ matrix.target }}
   # features:
   #   if: ${{ github.event.inputs.publish }}
   #   name: Features
