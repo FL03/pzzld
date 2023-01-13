@@ -17,7 +17,7 @@ pub fn app(cx: Scope) -> Element {
 
     cx.render(rsx!(
         div { class: "bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 flex flex-col items-center justify-center m-0 p-0 z-0 min-h-screen min-w-full max-w-screen",
-            header { class: "text-gray-400 bg-gray-900 body-font",
+            header { class: "body-font prose prose-invert",
                 NavBar { banner: banner.to_string() }
             }
             section { class: "flex flex-col grow items-center justify-center min-h-full max-h-screen min-w-full max-w-screen z-0",
