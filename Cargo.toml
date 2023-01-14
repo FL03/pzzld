@@ -11,10 +11,11 @@ default-members = [
     "pzzld"
 ]
 exclude = [
-    "xtask",
+    # "xtask",
 ]
 members = [
     "pzzld",
+    "xtask"
 ]
 
 [profile.dev]

@@ -6,23 +6,20 @@
 use xtask::*;
 
 use axum::{
-    body::{boxed, Body, BoxBody},
-    http::{Request, Response, StatusCode, Uri},
+    http::StatusCode,
     response::IntoResponse,
-    routing::get_service
+    routing::get_service,
 };
 use clap::{arg, command, value_parser, ArgAction, ArgMatches, Command};
-use std::path::PathBuf;
-use tower::ServiceExt;
+use std::{net::SocketAddr, path::PathBuf};
 use tower_http::services::ServeDir;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
     tracing::info!("Welcome to xtask...");
-    wasm_server().await?;
 
-    cli()?;
+    cli().await?;
 
     Ok(())
 }
@@ -49,6 +46,12 @@ pub fn base_matches(sc: Command) -> ArgMatches {
                 .value_parser(value_parser!(u16).range(1..))
                 .default_value("8080"),
         )
+        .arg(
+            arg!(up:
+                -u --up ... "Spawn the system"
+            )
+            .action(ArgAction::SetTrue),
+        )
         .arg_required_else_help(true)
         .propagate_version(true)
         .subcommand(sc)
@@ -56,15 +59,23 @@ pub fn base_matches(sc: Command) -> ArgMatches {
         .get_matches()
 }
 
-pub fn cli() -> anyhow::Result<()> {
+pub async fn cli() -> anyhow::Result<()> {
     let matches = base_matches(
         Command::new("app")
             .about("Application commands")
             .arg(arg!(build: -b --build <BUILD> "Build the workspace"))
-            .arg(arg!(serve: -s --serve <BUILD> "Build the workspace"))
+            .arg(arg!(serve: -s --serve <SERVE> "Build the workspace"))
     );
 
-    let port: u16 = *matches.get_one::<u16>("PORT").unwrap();
+    let port: u16 = *matches.get_one::<u16>("port").unwrap();
+
+    if let Some(_up) = matches.clone().get_one::<bool>("up") {
+        tracing::info!("Serving the static assets...");
+        wasm_server(Some(port)).await?;
+    }
+    if let Some(_sc) = matches.clone().subcommand_matches("app") {
+        
+    }
 
     println!("{:?}", port);
     Ok(())
@@ -81,15 +92,16 @@ impl System {
 }
 
 /// Quickstart a server for static assets
-pub async fn wasm_server() -> anyhow::Result<()> {
+pub async fn wasm_server(port: Option<u16>) -> anyhow::Result<()> {
     let root = project_root().to_str().unwrap().to_string();
     let dist = format!("{}/{}", root, "dist");
     
     let serve_dir = get_service(ServeDir::new(dist.as_str())).handle_error(handle_error);
     let app = axum::Router::new()
         .nest_service("/", serve_dir);
-    axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
+    axum::Server::bind(&SocketAddr::from(([0, 0, 0, 0], port.unwrap_or(8080))))
         .serve(app.into_make_service())
+        .with_graceful_shutdown(xtask::graceful_shutdown())
         .await
         .unwrap();
     Ok(())
@@ -108,6 +120,14 @@ impl Wasm {
         let serve_dir = get_service(ServeDir::new(self.workdir.as_str())).handle_error(handle_error);
         axum::Router::new()
             .nest_service("/", serve_dir)
+    }
+    pub async fn server(&self) -> anyhow::Result<()> {
+        axum::Server::bind(&SocketAddr::from(([0, 0, 0, 0], self.port)))
+            .serve(self.client().await.into_make_service())
+            .with_graceful_shutdown(xtask::graceful_shutdown())
+            .await
+            .unwrap();
+        Ok(())
     }
 }
 

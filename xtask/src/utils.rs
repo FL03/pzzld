@@ -44,6 +44,13 @@ pub fn execute_bundle(bundle: HashMap<&str, Vec<Vec<&str>>>) -> Result<()> {
     }
     Ok(())
 }
+/// Simple function wrapper for [tokio::signal::ctrl_c]
+pub async fn graceful_shutdown() {
+    tokio::signal::ctrl_c()
+        .await
+        .expect("Expect shutdown signal handler");
+    tracing::info!("Signal received; initiating shutdown procedures...");
+}
 /// Fetch the project root unless specified otherwise with a CARGO_MANIFEST_DIR env variable
 pub fn package_name() -> String {
     env!("CARGO_PKG_NAME").to_string()

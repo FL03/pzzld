@@ -30,15 +30,15 @@ let
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
 in {
-  pzzld = rustPlatformWasm.buildRustPackage (common // {
+  wasm = rustPlatformWasm.buildRustPackage (common // {
     pname = "pzzld";
 
     buildPhase = ''
-      cargo build --release -p pzzld --target=wasm32-unknown-unknown
+      trunk build --release
     '';  
     installPhase = ''
       mkdir -p $out/lib
-      cp target/wasm32-unknown-unknown/release/*.wasm $out/lib/
+      cp dist/ $out/lib/
     '';  
   });
 }
