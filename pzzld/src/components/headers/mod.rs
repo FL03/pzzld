@@ -1,9 +1,7 @@
 /*
-    Appellation: components <module>
+    Appellation: headers <module>
     Contrib: FL03 <jo3mccain@icloud.com> (https://github.com/FL03)
     Description: ... Summary ...
 */
 
-pub mod headers;
-pub mod icons;
-pub mod nav;
+pub mod hero;

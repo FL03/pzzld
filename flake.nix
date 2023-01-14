@@ -14,10 +14,11 @@
         code = pkgs.callPackage ./. { inherit nixpkgs system rust-overlay; };
       in rec {
         packages = {
-          default = pkgs.symlinkJoin {
+          all = pkgs.symlinkJoin {
             name = "all";
-            paths = with code; [];
+            paths = with code; [ ];
           };
+          default = packages.all;
         };
       }
     );

@@ -7,9 +7,9 @@ let
 
   rustVersion = "1.68.0";
   wasmUnknownUknown = "wasm32-unknown-unknown";
-  wasm32Wasi = "wasm32-wasi";
+  wasmWasi = "wasm32-wasi";
 
-  rustWithWasmTarget = rustPkgs.rust-bin.nightly.${rustVersion}.default.override {
+  rustWithWasmTarget = rustPkgs.rust-bin.default.${rustVersion}.default.override {
     targets = [ wasmUnknownUknown ];
   };
 
@@ -30,7 +30,15 @@ let
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
 in {
-  workspace = pkgs.rustPlatformWasm.buildRustPackage (common // {
-    cargoBuildFlags = "--release --workspace --target wasm32-unknown-unknown";
+  pzzld = rustPlatformWasm.buildRustPackage (common // {
+    pname = "pzzld";
+
+    buildPhase = ''
+      cargo build --release -p pzzld --target=wasm32-unknown-unknown
+    '';  
+    installPhase = ''
+      mkdir -p $out/lib
+      cp target/wasm32-unknown-unknown/release/*.wasm $out/lib/
+    '';  
   });
 }

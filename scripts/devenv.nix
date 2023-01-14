@@ -1,4 +1,4 @@
-{ pkgs, ... };
+{ pkgs, rustc, cargo };
 
 {
   packages = [ pkgs.git ];
