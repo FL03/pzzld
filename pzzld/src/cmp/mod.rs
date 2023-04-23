@@ -4,6 +4,6 @@
     Description: ... Summary ...
 */
 
-pub mod headers;
+pub mod hero;
 pub mod icons;
 pub mod nav;

@@ -4,10 +4,10 @@
     Description: ... Summary ...
 */
 #![allow(non_snake_case)]
-use crate::components::icons::{RightArrowIcon, StacksIcon};
+use crate::cmp::icons::{RightArrowIcon, StacksIcon};
 use dioxus::prelude::*;
 
-#[derive(Clone, Debug, Default, Eq, Hash, PartialEq, Props)]
+#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, Props)]
 
 pub struct State {
     pub banner: String,
@@ -21,16 +21,16 @@ pub fn NavBar(cx: Scope<State>) -> Element {
                     StacksIcon {}
                     span { class: "ml-3 text-xl", "{cx.props.banner}"}
                 }
-                div { class: "flex grow items-center justify-start",
-                    ul { class: "hidden md:flex lg:flex list-none prose prose-invert",
+                div { class: "flex grow items-center justify-start p-3",
+                    ul { class: "list-none hidden prose prose-invert",
                         li { class: "",
-                            a { class: "block px-3 hover:opacity-75 hover:italic", "Apps"}
+                            a { class: "block px-3 py-2 hover:opacity-75 hover:italic", "Apps"}
                         }
                     }
                 }
                 button {
                     class: "inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0",
-                    "Login"
+                    "Button"
                     RightArrowIcon {}
                 }
             }
