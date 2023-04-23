@@ -2,6 +2,7 @@
 
 [![Clippy](https://github.com/FL03/pzzld/actions/workflows/clippy.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/clippy.yml)
 [![Docker](https://github.com/FL03/pzzld/actions/workflows/docker.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/docker.yml)
+[![Pages](https://github.com/FL03/pzzld/actions/workflows/pages.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/pages.yml)
 [![Rust](https://github.com/FL03/pzzld/actions/workflows/rust.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/rust.yml)
 
 ***
@@ -35,8 +36,7 @@ docker pull jo3mccain/pzzld:latest
 #### _Run the image_
 
 ```bash
-docker run \
-    -p 8080:8080 \
+docker run -d -p 8080:80 \
     -e CLIENT_ID="${CLIENT_ID}" \
     -e CLIENT_SECRET="${CLIENT_SECRET}" \
     -e S3_ACCESS_KEY="${S3_ACCESS_KEY}" \

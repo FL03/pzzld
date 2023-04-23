@@ -1,7 +1,7 @@
 [package]
 authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
 categories = []
-default-run = "web"
+default-run = "puzzled"
 description = "Puzzled"
 edition = "2021"
 homepage = "https://github.com/FL03/pzzld/wiki"
@@ -11,34 +11,46 @@ name = "pzzld"
 repository = "https://github.com/FL03/pzzld"
 version = "0.1.0"
 
-[lib]
-crate-type = [ "cdylib", "rlib" ]
-test = true
-
 [[bin]]
-name = "web"
-path = "src/bin/web/main.rs"
+bench = false
+name = "puzzled"
+path = "src/bin/puzzled.rs"
 test = false
 
-[build-dependencies]
-substrate-wasm-builder = "10.0.0"
+[features]
+default = []
 
-[dev-dependencies]
-wasm-bindgen-test = "0.3"
+wasm = []
+wasm-ext = []
+
+[lib]
+bench = true
+crate-type = [ "cdylib", "rlib" ]
+doctest = true
+test = true
+
+[build-dependencies]
 
 [dependencies]
+anyhow = "1"
 dioxus = { features = ["macro"], version = "0.3" }
+[target.'cfg(any(macos, unix, windows))'.dependencies]
+dioxus-desktop = "0.3"
+[target.'cfg(target_family = "wasm")'.dependencies]
 dioxus-web = { features = ["hydrate"], version = "0.3" }
-ethers = { features = ["abigen", "legacy", "ws"], version = "1" }
-futures = "0.3.25"
+futures = "0.3"
 gloo = { features = [ "futures" ], version = "0.8" }
-js-sys = { features = [], version = "0.3.60" }
+js-sys = { features = [], version = "0.3" }
+log = "0.4"
+pulldown-cmark = { features = [], version = "0.9" }
 serde = { features = ["derive"], version = "1" }
 serde_json = "1"
-strum = { features = ["derive"], version = "0.24.1" }
+strum = { features = ["derive"], version = "0.24" }
 
-wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2.83"}
+# WebAssembly (emscripten)
+wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2" }
 wasm-bindgen-futures = "0.4"
+wasm-logger = "0.2"
 
 [dependencies.web-sys]
 features = [
@@ -46,7 +58,10 @@ features = [
     "HtmlCanvasElement",
     "Node"
 ]
-version = "0.3.60"
+version = "0.3"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
 
 [package.metadata.docs.rs]
 all-features = true

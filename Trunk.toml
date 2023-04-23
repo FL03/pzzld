@@ -1,6 +1,5 @@
 [build]
 dist = "dist"
-release = true
 target = "pzzld/index.html"
 
 [serve]
@@ -8,8 +7,6 @@ address = "0.0.0.0"
 no_autoreload = false
 open = false
 port = 8080
-
-
 
 # [[hooks]]
 # stage = "build"
