@@ -4,6 +4,11 @@
         "name": "FL03",
         "url": "https://github.com/FL03"
     },
+    "dependencies": {},
+    "description": "A sandbox application for experimenting with new features in Rust and WebAssembly.",
+    "devDependencies": {
+        
+    },
     "license": "Apache-2.0",
     "name": "@pzzld/wasm",
     "readme": "https://github.com/FL03/pzzld/#README",
