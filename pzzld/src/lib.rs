@@ -55,6 +55,11 @@ pub fn app(cx: Scope<ApplicationScope>) -> Element {
             main { class: "flex flex-col grow items-center justify-center min-h-full max-h-screen min-w-full max-w-screen z-0",
                 div { class: "container mx-auto flex px-5 py-24 md:flex-row flex-col items-center",
                     Hero { banner: cx.props.name.clone(), src: img.clone() },
+                    div { class: "flex flex-col md:ml-auto w-full md:w-1/2 p-8",
+                        div { id: "sign-in-status" },
+                        div { id: "sign-in" },
+                        div { id: "account-details" },
+                    }
                 }
             }
         }
