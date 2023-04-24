@@ -4,16 +4,12 @@
     Description: ... Summary ...
 */
 #![allow(non_snake_case)]
+use super::Navigation;
 use crate::cmp::icons::{RightArrowIcon, StacksIcon};
 use dioxus::prelude::*;
 
-#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, Props)]
 
-pub struct State {
-    pub banner: String,
-}
-
-pub fn NavBar(cx: Scope<State>) -> Element {
+pub fn NavBar(cx: Scope<Navigation>) -> Element {
     cx.render(
         rsx!(
             nav { class: "flex flex-nowrap grow items-center justify-center bg-transparent prose prose-invert min-w-full max-w-screen my-0 p-3 sticky top-0 z-50",

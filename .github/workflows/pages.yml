@@ -35,7 +35,7 @@ jobs:
       - name: Setup (trunk)
         run: cargo install trunk wasm-bindgen-cli
       - name: Build
-        run: trunk build --release
+        run: trunk --config pzzld/Trunk.toml build --release
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v1
         with:
