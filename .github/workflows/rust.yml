@@ -1,49 +1,73 @@
 name: Rust
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
   CARGO_TERM_COLOR: always
 
 on:
-  pull_request:
-    branches-ignore: [ "beta*", "dev*", "next*" ]
   push:
-    branches-ignore: [ "beta*", "dev*", "next*" ]
-    tags: [ "v*.*.*" ]
+    branches: [ main ]
+    tags: [ "nightly*",  "v*.*.*" ]
   release:
-    types: [ published ]
+    types: [ created ]
   repository_dispatch:
     types: [ rust ]
   schedule:
-    - cron: "30 9 * * *" # 9:30 UTC
+    - cron: "30 21 * * 0" # 9:30pm UTC
   workflow_dispatch:
-    inputs:
-      publish:
-        default: true
-        description: 'Publish'
-        required: true
-        type: boolean
 
 jobs:
-  build:
-    name: Build and Test
-    runs-on: ubuntu-latest
+  builder:
+    name: Build
     strategy:
       matrix:
-        target: [ wasm32-unknown-unknown, wasm32-wasi ]
+        platform: [ macos-latest, ubuntu-latest, windows-latest ]
+        toolchain: [ stable, nightly ]
+    runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup (rustup)
+      - uses: actions/checkout@v4
+      - name: setup (langspace)
         run: |
-          rustup default nightly
-          rustup target add ${{ matrix.target }} --toolchain nightly
+          rustup update
+          rustup default ${{ matrix.toolchain }}
       - name: Build
-        run: cargo build --release --target ${{ matrix.target }} -v
-  publish:
-    if: ${{ github.event.inputs.publish }}
-    name: Publish
-    # needs: sdk
+        run: cargo build -F full --release -v --workspace
+      - name: Cache build
+        id: cache-build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/release
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+  test:
+    name: Test
+    needs: [ builder ]
+    strategy:
+      matrix:
+        toolchain: [ stable, nightly ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Publish (pzzld)
-        run: cargo publish --all-features -v -p pzzld --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: setup (langspace)
+        run: |
+          rustup update
+          rustup default ${{ matrix.toolchain }}
+      - name: Test
+        run: cargo test --all -F full --release -v
+  bench:
+    name: Benchmark
+    needs: [ builder ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: setup (langspace)
+        run: |
+          rustup update
+          rustup default nightly
+      - name: Bench
+        run: cargo bench --all -F full -v

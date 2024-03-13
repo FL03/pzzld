@@ -1,13 +1,13 @@
 # pzzld
 
 [![Clippy](https://github.com/FL03/pzzld/actions/workflows/clippy.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/clippy.yml)
-[![Docker](https://github.com/FL03/pzzld/actions/workflows/docker.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/docker.yml)
-[![Pages](https://github.com/FL03/pzzld/actions/workflows/pages.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/pages.yml)
 [![Rust](https://github.com/FL03/pzzld/actions/workflows/rust.yml/badge.svg)](https://github.com/FL03/pzzld/actions/workflows/rust.yml)
+[![crates.io](https://img.shields.io/crates/v/pzzld.svg)](https://crates.io/crates/pzzld)
+[![docs.rs](https://docs.rs/pzzld/badge.svg)](https://docs.rs/pzzld)
 
 ***
 
-Welcome to Puzzled, this repository boasts several WebAssembly microservices optimized for complete integration with the SCSYS ecosystem.
+Acme is an application toolkit for building cloud-native applications in Rust designed for complete integration with the scsys ecosystem.
 
 ## Getting Started
 
@@ -17,31 +17,6 @@ Welcome to Puzzled, this repository boasts several WebAssembly microservices opt
 
 ```bash
 git clone https://github.com/FL03/pzzld
-```
-
-### Docker
-
-#### _Build the image locally_
-
-```bash
-docker buildx build --tag pzzld:latest .
-```
-
-#### _Pull the pre-built image_
-
-```bash
-docker pull jo3mccain/pzzld:latest
-```
-
-#### _Run the image_
-
-```bash
-docker run -d -p 8080:80 \
-    -e CLIENT_ID="${CLIENT_ID}" \
-    -e CLIENT_SECRET="${CLIENT_SECRET}" \
-    -e S3_ACCESS_KEY="${S3_ACCESS_KEY}" \
-    -e S3_SECRET_KEY="${S3_SECRET_KEY}"  \
-    jo3mccain/pzzld:latest
 ```
 
 ### Usage

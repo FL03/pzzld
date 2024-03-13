@@ -1,8 +1,0 @@
-tasks:
-  - init: |
-      rustup default nightly
-      rustup component add clippy rustfmt --toolchain nightly
-      rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly
-      npm install -g npm@9.2.0 wasm-pack 
-      cargo install dioxus-cli wasm-bindgen-cli trunk
-    command: trunk serve

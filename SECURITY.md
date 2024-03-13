@@ -2,17 +2,19 @@
 
 ## Supported Versions
 
-This section is used to update intrested parties as to which versions are currently supported, with respect to the current version.
+Use this section to tell people about which versions of your project are
+currently being supported with security updates.
 
-| Package | Current | Supported |
-|---------|---------|-----------|
-|         |         |           |
+| Package      | Current | Supported |
+|--------------|---------|-----------|
+| pzzld        | 0.1.0   | <=0.1.0   |
 
 ## Reporting a Vulnerability
 
-If you discover a vulnerability feel free to email me at j3mccain@gmail.com or visit my [website](https://pzzld.eth.limo) for more information.
+If you discover a bug, have more questions, or wish to submit an idea feel free to email me at j3mccain@gmail.com
+or visit the company [website](https://scattered-systems.com) for more information.
 
-### *Contributors*
+### Quick Links
 
-* [Company](https://github.com/scattered-systems)
-* [Creator](https://github.com/FL03)
+* [Crate](https://crates.io/crates/pzzld)
+* [Docs](https://docs.rs/pzzld)

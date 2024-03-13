@@ -3,26 +3,16 @@ updates:
   - package-ecosystem: cargo
     directory: /
     schedule:
-        interval: daily
-  - package-ecosystem: docker
-    directory: /
-    schedule:
-        interval: daily
+      interval: daily
   - package-ecosystem: github-actions
     directory: /
     schedule:
-        interval: daily
+      interval: daily
   - package-ecosystem: cargo
     directory: /pzzld
     schedule:
-        interval: daily
-  - package-ecosystem: npm
-    directory: /pzzld
-    schedule:
-        interval: daily
+      interval: daily
   - package-ecosystem: cargo
-    directory: /xtask
+    directory: /bin/pzzld-cli
     schedule:
-        interval: daily
-
-
+      interval: daily
