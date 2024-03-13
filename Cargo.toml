@@ -13,11 +13,15 @@ version = "0.1.0" # TODO - Update cargo package version
 default-members = [
     "pzzld"
 ]
+
 exclude = [ ]
+
 members = [
+    "core",
     "pzzld",
     "bin/pzzld-cli",
 ]
+
 resolver = "2"
 
 [workspace.dependencies]

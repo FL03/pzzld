@@ -6,7 +6,7 @@ edition.workspace = true
 homepage.workspace = true
 keywords = []
 license.workspace = true
-name = "pzzld"
+name = "pzzld-core"
 readme.workspace = true
 repository.workspace = true
 version.workspace = true
@@ -27,7 +27,6 @@ test = true
 [build-dependencies]
 
 [dependencies]
-pzzld-core = { path = "../core", version = "0.1.0" }
 
 [dev-dependencies]
 
