@@ -1,0 +1,55 @@
+version: "4.0"
+
+services:
+  app:   
+    command: npm start
+    container_name: app  
+    image: jo3mccain/pzzld-org-app:latest
+    build: 
+      context: .
+      dockerfile: app/Dockerfile
+      tags:
+        - jo3mccain/pzzld-org-app:latest   
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    networks: [ default, frontend ]
+    ports:
+      - "3000:3000"
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    networks: [ default, backend ]
+    ports:
+      - 6379:6379
+    volumes:
+      - cache:/data
+
+volumes:
+  config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./config
+      o: bind
+  data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./data
+      o: bind
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: pzzld_org_default
+  backend:
+    # Use a custom driver
+    driver: custom-driver
+  frontend:
+    # Specify driver options
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"

@@ -1,0 +1,9 @@
+package component:actor@0.0.0;
+
+interface worker {
+    run: func() -> void;
+}
+
+world actor {
+    export worker;
+}

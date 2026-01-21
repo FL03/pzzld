@@ -1,0 +1,62 @@
+[package]
+default-run = "pzzld"
+description = "The primary node software providing the base for the pzzld platform."
+name = "pzzld-node"
+
+authors.workspace = true
+categories.workspace = true
+edition.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+license.workspace = true
+readme.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[[bin]]
+bench = false
+name = "pzzld"
+path = "bin/main.rs"
+test = false
+
+[lib]
+bench = false
+
+[dependencies]
+pzzld = { features = ["default"], workspace = true }
+# app
+clap = { default-features = true, features = ["derive"], workspace = true }
+config = { default-features = true, workspace = true }
+# time
+chrono = { default-features = true, features = ["serde"], workspace = true }
+# error-handling
+anyhow = { default-features = true, workspace = true }
+# logging and tracing
+tracing = { default-features = true, workspace = true }
+tracing-subscriber = { default-features = true, features = ["env-filter"], workspace = true }
+# serialization
+serde = { default-features = true, workspace = true }
+serde_json = { default-features = true, workspace = true }
+# macros & utilities
+paste = { workspace = true }
+strum = { default-features = true, workspace = true }
+url = { default-features = true, features = ["serde"], workspace = true }
+
+[dependencies.tokio]
+features = ["sync", "macros", "io-util", "rt", "time"]
+workspace = true
+
+[features]
+default = []
+
+full = [
+  "pzzld/full",
+  "multi-thread",
+]
+
+multi-thread = ["tokio/rt-multi-thread"]
+
+net = [
+  "tokio/net",
+]

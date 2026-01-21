@@ -1,0 +1,127 @@
+[package]
+build = "build.rs"
+name = "pzzld"
+
+authors.workspace = true
+categories.workspace = true
+description.workspace = true
+edition.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+license.workspace = true
+readme.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[package.metadata.docs.rs]
+all-features = false
+features = ["default"]
+rustc-args = ["--cfg", "docsrs"]
+version = "v{{version}}"
+
+[package.metadata.release]
+no-dev-version = true
+tag-name = "v{{version}}"
+
+[lib]
+path = "lib.rs"
+
+[[bench]]
+name = "default"
+harness = false
+
+[[example]]
+name = "basic"
+required-features = ["default"]
+
+[dependencies]
+pzzld-core = { workspace = true }
+
+[dev-dependencies]
+anyhow = { workspace = true }
+criterion = { features = ["plotters"], workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+[features]
+default = ["macros", "std"]
+
+full = [
+  "default",
+  "complex",
+  "hashbrown",
+  "json",
+  "rand",
+  "serde",
+]
+
+# ********* [FF] Features *********
+
+macros = [
+  "pzzld-core/macros",
+]
+
+nightly = [
+  "pzzld-core/nightly",
+]
+
+json = [
+  "alloc",
+  "serde",
+  "pzzld-core/json",
+]
+
+# ********* [FF] Environments *********
+std = [
+  "alloc",
+  "pzzld-core/std",
+]
+
+wasi = [
+  "alloc",
+  "pzzld-core/wasi",
+]
+
+wasm = [
+  "alloc",
+  "pzzld-core/wasm",
+]
+
+# ********* [FF] Dependencies *********
+alloc = [
+  "pzzld-core/alloc",
+]
+
+complex = [
+  "pzzld-core/complex",
+]
+
+hashbrown = [
+  "pzzld-core/hashbrown",
+]
+
+rand = [
+  "pzzld-core/rand",
+  "rng",
+]
+
+rayon = [
+  "pzzld-core/rayon",
+]
+
+rng = [
+  "pzzld-core/rng",
+]
+
+serde = [
+  "pzzld-core/serde",
+]
+
+serde_json = [
+  "pzzld-core/serde_json",
+]
+
+wasm_bindgen = [
+  "pzzld-core/wasm_bindgen",
+]

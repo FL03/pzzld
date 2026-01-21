@@ -1,0 +1,27 @@
+mode = "release"
+name = "arachnid"
+version = "0.0.2"
+
+[network.address]
+host = "0.0.0.0"
+port = 8080
+
+[services.tracing]
+level = "debug"
+
+[services.database]
+pool_size = 200
+max_connections = 15
+# url = "postgres://postgres:postgres@localhost:5432/postgres"
+# setup the database url
+[services.database.url]
+provider = "postgresql"
+username = "postgres"
+password = "postgres"
+host = "localhost"
+port = 5432
+database = "postgres"
+
+[workspace]
+artifacts = ".artifacts"
+workdir = "."

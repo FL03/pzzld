@@ -1,0 +1,106 @@
+[workspace]
+default-members = ["crates/sdk"]
+members = [
+  "bin/*",
+  "cmp/*",
+  "crates/*",
+]
+resolver = "3"
+
+[workspace.package]
+authors = [
+  "FL03 <joe@pzzld.org> (https://github.com/FL03)",
+]
+categories = []
+description = "pzzld works to provide several macros and interface for transparent wrapper types in Rust."
+edition = "2024"
+homepage = "https://github.com/FL03/pzzld/wiki"
+keywords = ["macros", "transparent", "wrapper"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/FL03/pzzld.git"
+rust-version = "1.85.0"
+version = "0.0.0"
+
+[workspace.dependencies]
+# sdk
+pzzld = { default-features = false, path = "crates/sdk", version = "0.0.0" }
+pzzld-core = { default-features = false, path = "crates/core", version = "0.0.0" }
+# components
+pzzld-cmp-basic = { default-features = false, path = "cmp/basic", version = "0.0.0" }
+
+# development
+criterion = { version = "0.8" }
+# async
+futures = { default-features = false, version = "0.3" }
+tokio = { default-features = false, features = [], version = "1" }
+# application
+axum = { default-features = false, version = "0.8" }
+clap = { features = ["derive", "env"], version = "4" }
+config = { features = [], version = "0.15" }
+# data structures
+bytes = { default-features = false, version = "1" }
+hashbrown = { default-features = false, version = "0.16" }
+# error handling
+anyhow = { default-features = false, version = "1" }
+thiserror = { default-features = false, version = "2" }
+# math
+num-complex = { default-features = false, version = "0.4" }
+num-traits = { default-features = false, version = "0.2" }
+# networking
+reqwest = { default-features = false, version = "0.13" }
+url = { default-features = false, version = "2" }
+# parallelism
+rayon = { default-features = false, version = "1" }
+rayon-core = { default-features = false, version = "1" }
+# random
+getrandom = { default-features = false, version = "0.3" }
+rand = { default-features = false, version = "0.9" }
+rand_distr = { default-features = false, version = "0.5" }
+# serialization
+serde = { default-features = false, features = ["derive"], version = "1" }
+serde_derive = { default-features = false, version = "1" }
+serde_json = { default-features = false, version = "1" }
+# macros & utilities
+paste = { version = "1" }
+strum = { default-features = false, features = ["derive"], version = "0.27" }
+# time
+chrono = { default-features = false, features = ["serde"], version = "0.4" }
+humantime = { default-features = false, version = "2" }
+time = { default-features = false, version = "0.3" }
+# logging
+tracing = { default-features = false, features = ["attributes"], version = "0.1" }
+tracing-subscriber = { default-features = false, features = ["env-filter", "fmt"], version = "0.3" }
+# WebAssembly
+wasm-bindgen = { default-features = false, version = "0.2" }
+# wasmtime
+wasmtime = { default-features = false, version = "41" }
+wasmtime-wasi = { default-features = false, version = "41" }
+wac-graph = { default-features = false, version = "0.8" }
+# wasm interfaces
+wit-bindgen-rt = { default-features = false, features = ["bitflags"], version = "0.44" }
+
+# ********* Profiles *********
+[profile.dev]
+codegen-units = 256
+debug = true
+debug-assertions = true
+incremental = true
+lto = "thin"
+opt-level = 2
+overflow-checks = true
+panic = "abort"
+rpath = false
+strip = false
+
+[profile.release]
+codegen-units = 16
+debug = false
+debug-assertions = false
+incremental = false
+lto = "fat"
+opt-level = "z"
+overflow-checks = false
+panic = "abort"
+rpath = false
+strip = "debuginfo"

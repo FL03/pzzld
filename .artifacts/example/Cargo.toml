@@ -1,0 +1,60 @@
+[package]
+authors = [
+  "FL03 <joe@pzzld.org> (https://github.com/FL03)",
+]
+categories = ["wasm"]
+default-run = "sampler"
+description = "An example host for the wasm-component model"
+edition = "2024"
+keywords = ["wasm", "wasi", "component"]
+license = "Apache-2.0"
+name = "pzzld-cmp"
+readme = "README.md"
+version = "0.0.0"
+
+[[bin]]
+name = "sampler"
+path = "bin/sampler.rs"
+required-features = ["serde"]
+
+[lib]
+bench = false
+crate-type = ["cdylib", "rlib"]
+doctest = false
+name = "sample"
+path = "src/lib.rs"
+test = true
+
+[dependencies]
+# app
+clap = { features = ["derive", "env"], version = "4" }
+config = { version = "0.15" }
+# async
+tokio = { features = ["full"], version = "1" }
+# error
+anyhow = { workspace = true }
+# serialization
+serde = { features = ["derive"], version = "1" }
+# wasmtime
+wasmtime = { features = ["serde"], version = "41" }
+wasmtime-wasi = { version = "41" }
+# ext
+wac-graph = "0.8"
+wit-bindgen-rt = { features = ["bitflags"], version = "0.44" }
+
+[features]
+default = []
+
+full = [
+  "default",
+  "multi-thread",
+]
+
+# ********* [FF] Features *********
+multi-thread = [
+  "tokio/rt-multi-thread",
+]
+
+# ********* [FF] Environments *********
+
+# ********* [FF] Dependencies *********
